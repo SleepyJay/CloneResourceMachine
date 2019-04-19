@@ -1,0 +1,814 @@
+# Human Resources Machine
+# Note: Jumps are 1-based
+levels:
+    1:
+        name: Mail Room
+        available:
+            - inbox
+            - outbox
+        input:
+            alphabet: P A N Z
+            count: 3
+            sample:
+                - 3
+                - E
+                - 0
+        goal:
+            type: identity
+            formula: for $a => $a
+            size: 6
+            speed: 6
+        solutions:
+            optimal:
+                commands:
+                    - inbox
+                    - outbox
+                    - inbox
+                    - outbox
+                    - inbox
+                    - outbox
+    2:
+        name: Busy Mail Room
+        available:
+            - inbox
+            - outbox
+            - jump
+        input:
+            alphabet: P A N Z
+            count: 10
+        goal:
+            formula: for $a => $a
+            size: 3
+            speed: 25
+        solutions:
+            fast:
+                size: 24
+                speed: 20
+                commands:
+                    - repeat:
+                        count: 12
+                        commands:
+                            - inbox
+                            - outbox
+            small:
+                speed: 30
+                commands:
+                    - inbox
+                    - outbox
+                    - jump 1
+    3:
+        name: Copy Floor
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - jump
+        input:
+            alphabet: none
+            count: 0
+        goal:
+            expected:
+                - B
+                - U
+                - G
+            formula: () => “BUG”
+            size: 6
+            speed: 6
+        registers:
+            count: 6
+            values:
+                0: U
+                1: J
+                2: X
+                3: G
+                4: B
+                5: E
+        solutions:
+            optimal:
+                commands:
+                    - copyfrom 4
+                    - outbox
+                    - copyfrom 0
+                    - outbox
+                    - copyfrom 3
+                    - outbox
+    4:
+        name: Scrambler Handler
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - jump
+        input:
+            alphabet: P A N Z
+            count: 6
+        goal:
+            formula: for ($a, $b) => ($b, $a)
+            size: 7
+            speed: 21
+        registers:
+            count: 3
+        solutions:
+            optimal:
+                commands:
+                    - inbox
+                    - copyto 0
+                    - inbox
+                    - outbox
+                    - copyfrom 0
+                    - outbox
+                    - jump 1
+    5:
+        name: Coffee Time
+        movie: true
+    6:
+        name: Rainy Summer
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - jump
+        input:
+            alphabet: P N Z
+            count: 8
+            sample:
+                - 0
+                - 8
+                - 9
+                - 2
+                - -9
+                - 1
+                - 9
+                - -3
+        formula: for ($a, $b) => ($b + $a)
+        registers:
+            count: 3
+        goal:
+            size: 6
+            speed: 24
+        solutions:
+            optimal:
+                commands:
+                    - inbox
+                    - copyto 0
+                    - inbox
+                    - add 0
+                    - outbox
+                    - jump 1
+    7:
+        name: Zero Exterminator
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - jump
+            - jumpzero
+        input:
+            alphabet: P A N Z4
+            count: 8
+            sample:
+                - 7
+                - 0
+                - 4
+                - E
+                - 0
+                - 0
+                - 2
+                - 0
+        goal:
+            formula: for ($a) => if not 0
+            size: 4
+            speed: 23
+        registers:
+            count: 9
+        solutions:
+            optimal:
+                commands:
+                    - inbox
+                    - jumpzero 1
+                    - outbox
+                    - jump 1
+    8:
+        name: Tripler Room
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - jump
+        input:
+            alphabet: N Z
+            count: 4
+            sample:
+                - 1
+                - -5
+                - 7
+                - 0
+        registers:
+            count: 3
+        goal:
+            formula: for ($a) => $a * 3
+            size: 6
+            speed: 24
+        solutions:
+            optimal:
+                commands:
+                    - inbox
+                    - copyto 0
+                    - add 0
+                    - add 0
+                    - outbox
+                    - jump 1
+    9:
+        name: Zero Preservation Initiative
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - jump
+            - jumpzero
+        input:
+            alphabet: P A N Z4
+            count: 8
+            sample:
+                - 4
+                - 0
+                - -4
+                - F
+                - 0
+                - 0
+                - 5
+                - 0
+        registers:
+            count: 9
+        goal:
+            formula: for ($a) => if 0
+            size: 5
+            speed: 25
+        solutions:
+            small:
+                speed: 28
+                size: 5
+                commands:
+                    - inbox         # 1
+                    - jumpzero 4
+                    - jump 1
+                    - outbox        # 4
+                    - jump 1
+            fast:
+                size: 9
+                speed: 24
+                commands:
+                    - inbox         # 1
+                    - jumpzero 8
+                    - inbox
+                    - jumpzero 8
+                    - inbox
+                    - jumpzero 8
+                    - inbox
+                    - outbox        # 8
+                    - jump 1
+    10:
+        name: Octoplier Suite
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - jump
+        input:
+            alphabet: P N Z
+            count: 4
+            example:
+                - 4
+                - -1
+                - 4
+                - 0
+        goal:
+            formula: for ($a) => $a * 8
+            size: 9
+            speed: 36
+        registers:
+            count: 5
+        solutions:
+            optimal:
+                commands:
+                    - inbox
+                    - copyto 0
+                    - add 0
+                    - copyto 1
+                    - add 1
+                    - copyto 2
+                    - add 2
+                    - outbox
+                    - jump 1
+    11:
+        name: Sub Hallway
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - jump
+            - jumpzero
+        input:
+            alphabet: P N
+            count: 8
+            sample:
+                - 4
+                - 8
+                - 8
+                - 1
+                - -8
+                - -8
+                - 2
+                - -6
+        goal:
+            formula: for ($a, $b) => ($b - $a, $a - $b)
+            size: 10
+            speed: 40
+        registers:
+            count: 3
+        solutions:
+            optimal:
+                commands:
+                    - inbox
+                    - copyto 0
+                    - inbox
+                    - copyto 1
+                    - sub 0
+                    - outbox
+                    - copy from 0
+                    - sub 1
+                    - outbox
+                    - jump 0
+    12:
+        name: Tetracontiplier
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - jump
+        input:
+            alphabet: P N Z
+            count: 4
+            sample:
+                - 3
+                - -2
+                - 6
+                - 0
+        goal:
+            formula: for ($a) => $a * 40
+            size: 14
+            speed: 56
+        registers:
+            count: 5
+        solutions:
+            optimal:
+                commands:
+                    - inbox
+                    - repeat:
+                        count: 4
+                        commands:
+                            - copyto 0
+                            - add 0
+                    - repeat:
+                         count: 3
+                         commands:
+                             - add 0
+                    - outbox
+                    - jump
+    13:
+        name: Equalization Room
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - jump
+            - jumpzero
+        input:
+            alphabet: P
+            count: 8
+            sample:
+                - 1
+                - 5
+                - 9
+                - 9
+                - 9
+                - 9
+                - 2
+                - 2
+        goal:
+            formula: for ($a, $b) => $(a|b) if $a == $b
+            size: 9
+            speed: 27
+        registers:
+            count: 3
+        solutions:
+            optimal:
+                commands:
+                    - jump 4
+                    - copyfrom 0
+                    - outbox
+                    - inbox
+                    - copyto 0
+                    - inbox
+                    - sub 0
+                    - jumpzero 2
+                    - jump 4
+    14:
+        name: Maximization Room
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - jump
+            - jumpzero
+            - jumpneg
+        input:
+            alphabet: P N Z
+            count: 8
+            sample:
+                - 5
+                - 7
+                - -1
+                - -8
+                - 1
+                - 1
+                - -5
+                - -8
+        goal:
+            formula: for ($a, $b) => max($a, $b)
+            size: 10
+            speed: 34
+        registers:
+            count: 3
+        solutions:
+            optimal:
+                speed: 31
+                commands:
+                    - jump 4
+                    - copyfrom 0
+                    - outbox
+                    - inbox
+                    - copyto 0
+                    - inbox
+                    - sub 0
+                    - jumpneg 2
+                    - add 0
+                    - jump 3
+    15:
+        name: Employee Morale Insertion
+        movie: true
+    16:
+        name: Absolute Posititvity
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - jump
+            - jumpzero
+            - jumpneg
+        input:
+            alphabet: P N Z
+            count: 7
+            sample:
+                - 6
+                - -4
+                - 3
+                - 0
+                - -1
+                - -4
+                - 3
+        goal:
+            formula: for $a => abs($a)
+            size: 8
+            speed: 36
+        registers:
+            count: 3
+        solutions:
+            optimal:
+                speed: 34
+                commands:
+                    - jump 6
+                    - copyto 0
+                    - sub 0
+                    - sub 0
+                    - outbox
+                    - inbox
+                    - jumpneg 2
+                    - jump 5
+    17:
+        name: Exclusive Lounge
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - jump
+            - jumpzero
+            - jumpneg
+        input:
+            alphabet: P N
+            count: 8
+            sample:
+                - -6
+                - -6
+                - 7
+                - 8
+                - 7
+                - -2
+                - -4
+                - 8
+        goal:
+            formula: for ($a, $b) => same_sign($a, $b) then 0 else 1
+            size: 8
+            speed: 36
+        registers:
+            count: 6
+            values:
+                4: 0
+                5: 0
+        solutions:
+            small:
+                speed: 29
+                commands:
+                    - jump 4            # 1
+                    - copyfrom 4
+                    - outbox            # 3
+                    - inbox             # 4
+                    - jumpneg 9
+                    - inbox
+                    - jumpneg 11
+                    - jump 2            # 8
+                    - inbox             # 9
+                    - jumpneg 8
+                    - copyfrom 5
+                    - jump 3
+            fast:
+                size: 14
+                speed: 28
+                commands:
+                    - jump 7
+                    - copyfrom 4
+                    - outbox
+                    - jump 7
+                    - copyfrom 5
+                    - outbox
+                    - inbox
+                    - jumpneg 12
+                    - inbox
+                    - jumpneg 5
+                    - jump 2
+                    - inbox
+                    - jumpneg 2
+                    - jump 5
+    18:
+        name: Sabbatical Beach Paradise
+        movie: true
+    19:
+        name: Countdown
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - bump+
+            - bump-
+            - jump
+            - jumpzero
+            - jumpneg
+        input:
+            alphabet: P N Z
+            count: 4
+            sample:
+                - 9
+                - -4
+                - 0
+                - -6
+        goal:
+            formula: for $a => each ($a to 0)
+            size: 10
+            speed: 82
+        registers:
+            count: 10
+        solutions:
+            small:
+                speed: 122
+                commands:
+                    - inbox
+                    - copyto 0
+                    - outbox
+                    - copyfrom 0
+                    - jumpzero 1
+                    - jumpneg 9
+                    - bump- 0
+                    - jump 10
+                    - bump+ 0
+                    - jump 3
+            fast:
+                size: 14
+                speed: 80
+                commands:
+                    - jump 3
+                    - outbox
+                    - inbox
+                    - copyto 0
+                    - jumpzero 2
+                    - jumpneg 11
+                    - outbox
+                    - bump- 0
+                    - jumpzero 2
+                    - jump 7
+                    - outbox
+                    - bump+ 0
+                    - jumpzero 2
+                    - jump 11
+    20:
+        name: Multiplication Workshop
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - bump+
+            - bump-
+            - jump
+            - jumpzero
+            - jumpneg
+        input:
+            alphabet: P N Z
+            count: 10
+            sample:
+                - 2
+                - 4
+                - 2
+                - 6
+                - 4
+                - 0
+                - 0
+                - 2
+                - 7
+                - 8
+        goal:
+            formula: for ($a, $b) => $a * $b
+            size: 15
+            speed: 109
+        registers:
+            count: 10
+            values:
+                N: ''
+                i: ''
+                T: ''
+                S: ''
+                9: 0
+        solutions:
+            small:
+                speed:
+                commands:
+                    - inbox
+                    - copyto 0
+                    - outbox
+                    - copyfrom 0
+                    - jumpzero 1
+                    - jumpneg 9
+                    - bump- 0
+                    - jump 10
+                    - bump+ 0
+                    - jump 3
+            fast:
+                size: 27
+                speed: 109
+                commands:
+                    - jump
+                    - inbox
+                    - copyfrom 9
+                    - jump
+                    - copyfrom T
+                    - outbox
+                    - inbox
+                    - jumpzero
+                    - copyto S
+                    - copyto i
+                    - inbox
+                    - jumpzero
+                    - sub S
+                    - jumpneg
+                    - add S
+                    - jump
+                    - add S
+                    - copyto i
+                    - copyfrom S
+                    - copyto N
+                    - copyto T
+                    - bump- i
+                    - jumpzero
+                    - copyfrom N
+                    - add T
+                    - copyto T
+                    - jump
+    21:
+        name: Zero Terminated Sum
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - bump+
+            - bump-
+            - jump
+            - jumpzero
+            - jumpneg
+        input:
+            alphabet: P N Z
+            count: 16
+            sample:
+                - 7
+                - 2
+                - 0
+                - 8
+                - -9
+                - 8
+                - 0
+                - 0
+                - 0
+                - 8
+                - -3
+                - 1
+                - 4
+                - -5
+                - 2
+                - 0
+        goal:
+            formula: for $a => sum(each $a until 0)
+            size: 10
+            speed: 72
+        registers:
+            count: 6
+            values:
+                5: 0
+        solutions:
+#            small:
+#                speed:
+#                commands:
+
+            fast:
+                size: 11
+                speed: 68
+                commands:
+                    - jump 4
+                    - copyfrom 0
+                    - outbox
+                    - inbox
+                    - jumpzero 3
+                    - copyto 0
+                    - inbox
+                    - jumpzero 2
+                    - add  0
+                    - copyto 0
+                    - jump 7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
