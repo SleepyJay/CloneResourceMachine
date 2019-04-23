@@ -1,8 +1,8 @@
 
 from collections import namedtuple
 from JAGpy.Structs import lookup
-from Roboto.Input import Input
-from Roboto.Goal import Goal
+from Input import Input
+from Goal import Goal
 import re
 
 Solution = namedtuple('solution', 'key commands size speed labels')

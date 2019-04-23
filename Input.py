@@ -8,6 +8,7 @@ ZERO = [0]
 
 THINGS = dict(P=POSITIVE, N=NEGATIVE, Z=[0], A=ALPHABET)
 
+
 class Input(object):
 
     def __init__(self, alphabet='', count=0, sample=[]):

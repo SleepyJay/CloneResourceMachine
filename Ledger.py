@@ -7,8 +7,15 @@ Step = namedtuple('step', "line command inbox holding registers outbox comment")
 # TODO: I think this relationship needs a change
 class Ledger(object):
 
-    def __init__(self):
+    def __init__(self, level_obj, solution_obj):
         self.steps = []
+        self.level = level_obj
+        self.solution = solution_obj
+        self.input = None
+
+
+
+
 
         self.level_name = ''
         self.level_key = ''
@@ -20,22 +27,6 @@ class Ledger(object):
         self.error_state = None
         self.iter = 0
 
-
-    def yy_capture_start(self, name='start'):
-        level_info:
-            level_name, level_key, solution_name
-
-        initial step:
-            step_name, str(input), str(registers)
-
-        input
-
-        goal:
-        formula, expected, speed, size,
-
-        solution:
-        size, speed
-
     def yy_capture_step(self):
         step:
         line, command, inbox, holding, registers, outbox, comment
@@ -44,20 +35,11 @@ class Ledger(object):
         actual:
             size, speed, output
 
+    def capture_init_state(self, input, registers, name='start'):
+        self.initial_state = Step('', name, str(input), '', str(registers), [], '')
 
-
-
-
-    def capture_init_state(self, engine, name='start'):
-        self.initial_state = Step(
-            '', name, str(engine.input), '', str(engine.registers), [], '')
-
-        self.goal = engine.get_goal()
-
-
-        goal = engine.level_obj.goal
-        self.expected_size = engine.solution.size or goal.size
-        self.expected_speed = engine.solution.speed or goal.speed
+        self.expected_size = self.solution.size or self.goal.size
+        self.expected_speed = self.solution.speed or self.goal.speed
 
         self.command_count = len(engine.solution.commands)
 

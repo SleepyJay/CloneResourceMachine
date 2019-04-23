@@ -1,6 +1,6 @@
 
 import yaml
-from Roboto.Level import Level
+from Level import Level
 from JAGpy.Structs import lookup
 
 

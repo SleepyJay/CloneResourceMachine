@@ -22,8 +22,8 @@
     #[] `expected $x`
     #[] `input $x`
 
-from Roboto.Ledger import Ledger
-from Roboto.Expected import Expected
+from Ledger import Ledger
+from Expected import Expected
 
 # Engine runs one level at a time
 # Can run same or different solutions over and over
@@ -49,11 +49,8 @@ class Engine(object):
         self.next = None
         self.cur_command = ''
         self.cur_item = None
-
-        self.ledger = Ledger()
-        self.ledger.capture_init_state(self)
-
         self.next = 0
+        self.ledger = None
 
     # TODO: finish this
     def create_input(self, input_obj):
@@ -199,7 +196,4 @@ def build_registers(registers_obj):
             registers[key] = registers_obj.values[key]
 
     return registers
-
-
-
 

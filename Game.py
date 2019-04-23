@@ -1,6 +1,7 @@
 
-from Roboto.Engine import Engine
-from Roboto.Catalog import Catalog
+from Engine import Engine
+from Catalog import Catalog
+from Ledger import Ledger
 
 MAX_ITERS = 1000
 
@@ -11,6 +12,8 @@ class Game(object):
         self.engine = None
         self.catalog = None
         self.current_level = None
+        self.ledgers = []
+        self.ledger = None
 
     def load_level_file(self, filename):
         if not self.catalog:
@@ -29,12 +32,22 @@ class Game(object):
         self.current_level = level
 
         self.engine = Engine(level, solution_key, l_input)
+        self.create_ledger()
 
     def restart(self, l_input=None):
         level = self.engine.level_obj
         solution_key = self.engine.solution_key
 
         self.engine = Engine(level, solution_key, l_input)
+        self.create_ledger()
+
+    def create_ledger(self):
+        if self.ledger:
+            self.ledgers.append(self.ledger)
+
+        self.ledger = Ledger(self.current_level, self.engine.solution)
+        self.ledger.capture_init_state(input, self.engine.registers)
+        self.engine.ledger = self.ledger
 
     def run(self):
         i = 0
