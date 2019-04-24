@@ -11,41 +11,15 @@ class Ledger(object):
         self.steps = []
         self.level = level_obj
         self.solution = solution_obj
-        self.input = None
 
-
-
-
-
-        self.level_name = ''
-        self.level_key = ''
-        self.solution_key = ''
-        self.expected = None
-        self.goal = None
-        self.command_count = 0
+        self.goal = self.level.goal
         self.initial_state = None
         self.error_state = None
+
         self.iter = 0
 
-    def yy_capture_step(self):
-        step:
-        line, command, inbox, holding, registers, outbox, comment
-
-    def yy_capture_finish(self):
-        actual:
-            size, speed, output
-
-    def capture_init_state(self, input, registers, name='start'):
-        self.initial_state = Step('', name, str(input), '', str(registers), [], '')
-
-        self.expected_size = self.solution.size or self.goal.size
-        self.expected_speed = self.solution.speed or self.goal.speed
-
-        self.command_count = len(engine.solution.commands)
-
-        self.level_name = engine.level_obj.name
-        self.level_key = engine.level_obj.key
-        self.solution_key = engine.solution.key
+    def capture_init_state(self, l_input, registers, name='start'):
+        self.initial_state = Step('', name, str(l_input), '', str(registers), [], '')
 
     def capture_error_state(self, message):
         self.error_state = message
@@ -86,7 +60,7 @@ class Ledger(object):
 
             line = command.line
             if command.label:
-                line =  "{} ({})".format(line, command.label)
+                line = "{} ({})".format(line, command.label)
 
             cmd = command.name
             if command.val:
@@ -125,13 +99,13 @@ class Ledger(object):
         speed_res = ''
         if actual_speed <= goal.speed:
             speed_res = 'FAST'
-        elif actual_speed != self.expected_speed:
+        elif actual_speed != self.goal.speed:
             speed_res = 'slow?'
 
         size_res = ''
         if actual_size <= goal.size:
             size_res = 'SMALL'
-        elif actual_size != self.expected_size:
+        elif actual_size != self.goal.size:
             size_res = 'long?'
 
         goal_table = PrettyTable([
@@ -146,24 +120,17 @@ class Ledger(object):
 
         goal_table.add_row(['input', '', '', '', self.initial_state.inbox, ''])
         goal_table.add_row([goal.formula, '', '', '', str(outbox), passing])
-        goal_table.add_row(['size', goal.size, self.expected_size, actual_size, '', size_res ])
-        goal_table.add_row(['speed', goal.speed, self.expected_speed, actual_speed, '', speed_res])
+        goal_table.add_row(['size', goal.size, goal.size, actual_size, '', size_res ])
+        goal_table.add_row(['speed', goal.speed, goal.speed, actual_speed, '', speed_res])
 
         return str(goal_table)
 
     def get_size(self):
-        return self.command_count
+        return len(self.solution.commands)
 
     def get_speed(self):
         return len(self.steps)
 
     def __repr__(self):
         return "=== {} - {} : {}\n".format(
-            self.level_name, self.level_key, self.solution_key) + self.get_result_table()
-
-
-
-
-
-
-
+            self.level.name, self.level.key, self.solution.key) + self.get_result_table()

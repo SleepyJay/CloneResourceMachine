@@ -46,7 +46,7 @@ class Game(object):
             self.ledgers.append(self.ledger)
 
         self.ledger = Ledger(self.current_level, self.engine.solution)
-        self.ledger.capture_init_state(input, self.engine.registers)
+        self.ledger.capture_init_state(self.engine.input, self.engine.registers)
         self.engine.ledger = self.ledger
 
     def run(self):

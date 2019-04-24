@@ -1,5 +1,5 @@
 
-from Roboto.Game import Game
+from Game import Game
 from prettytable import PrettyTable
 
 # todo test available vs commands
@@ -50,8 +50,9 @@ game.load_level_file('levels/game.yaml')
 # game.load_level_file('levels/game_16.yaml')
 # game.load_level_data('test_data', test_data)
 
-# game.start_new(2, 'fast')
-game.start_new(2, 'small')
+game.start_new(2, 'fast')
+# game.start_new(2, 'small')
+#print(game.ledger)
 
 ledger = game.run()
 print(ledger)

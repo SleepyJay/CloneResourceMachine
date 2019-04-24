@@ -6,3 +6,4 @@ class Goal(object):
         self.size = size
         self.speed = speed
         self.expected = expected
+

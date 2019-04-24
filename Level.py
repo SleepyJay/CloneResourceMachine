@@ -12,6 +12,7 @@ Registers = namedtuple('registers', 'count values')
 # parse something like [label:] cur_command [value] [# comment]
 RE_cmd = re.compile(r'(?:(?P<lbl>\w+):)?\s*(?P<cmd>\w+)\s*(?P<val>\w+)?\s*(?P<cmt>[#]\s*.*)?')
 
+
 class Level(object):
 
     def __init__(self, key, data):
@@ -20,10 +21,10 @@ class Level(object):
         self.name = lookup(data, 'name')
         self.available = lookup(data, 'available', [])
 
-        self.goal = process_goal(lookup(data, 'goal'))
-        self.input = process_input(lookup(data, 'input'))
-        self.registers = process_registers(lookup(data, 'registers'))
-        self.solutions = process_solutions(lookup(data, 'solutions'))
+        self.goal = self.process_goal(lookup(data, 'goal'))
+        self.input = self.process_input(lookup(data, 'input'))
+        self.registers = self.process_registers(lookup(data, 'registers'))
+        self.solutions = self.process_solutions(lookup(data, 'solutions'))
 
         # list of input tried
         self.inboxes = []
@@ -36,70 +37,69 @@ class Level(object):
 
         return sol
 
+    def process_solutions(self, solutions_data):
+        solutions = dict()
 
-def process_solutions(solutions_data):
-    solutions = dict()
+        for key, solution in solutions_data.items():
+            pre_commands = []
 
-    for key, solution in solutions_data.items():
-        pre_commands = []
+            # expand any repeats
+            for cmd_item in solution['commands']:
+                if type(cmd_item) is dict:
+                    cmd_repeat = cmd_item['repeat']
+                    count = cmd_repeat['count']
 
-        # expand any repeats
-        for cmd_item in solution['commands']:
-            if type(cmd_item) is dict:
-                cmd_repeat = cmd_item['repeat']
-                count = cmd_repeat['count']
+                    for i in range(0, count):
+                        pre_commands.extend(cmd_repeat['commands'])
+                else:
+                    pre_commands.append(cmd_item)
 
-                for i in range(0, count):
-                    pre_commands.extend(cmd_repeat['commands'])
-            else:
-                pre_commands.append(cmd_item)
+            ln = 0
+            labels = dict()
+            commands = []
 
-        ln = 0
-        labels = dict()
-        commands = []
+            for str_cmd in pre_commands:
+                # just stripping any comments (for now?)
+                if str_cmd.startswith('#'):
+                    continue
 
-        for str_cmd in pre_commands:
-            # just stripping any comments (for now?)
-            if str_cmd.startswith('#'):
-                continue
+                m = RE_cmd.match(str_cmd)
+                (cmd, val, lbl, cmt) = m.group('cmd', 'val', 'lbl', 'cmt')
 
-            m = RE_cmd.match(str_cmd)
-            (cmd, val, lbl, cmt) = m.group('cmd', 'val', 'lbl', 'cmt')
+                command = Command(ln, cmd, val, lbl, cmt)
 
-            command = Command(ln, cmd, val, lbl, cmt)
+                if not command:
+                    continue
 
-            if not command:
-                continue
+                if command.label is not None:
+                    labels[command.label] = ln
 
-            if command.label is not None:
-                labels[command.label] = ln
+                commands.append(command)
 
-            commands.append(command)
+                ln += 1
 
-            ln += 1
+            size = lookup(solution, 'size', self.goal.size)
+            speed = lookup(solution, 'speed', self.goal.speed)
 
-        size = lookup(solution, 'size')
-        speed = lookup(solution, 'speed')
+            solutions[key] = Solution(key, commands, size, speed, labels)
 
-        solutions[key] = Solution(key, commands, size, speed, labels)
+        return solutions
 
-    return solutions
+    def process_registers(self, register_data):
+        if not register_data:
+            return Registers(0, [])
 
-def process_registers(register_data):
-    if not register_data:
-        return Registers(0, [])
+        return Registers(lookup(register_data, 'count', 0), lookup(register_data, 'registers', []))
 
-    return Registers(lookup(register_data, 'count', 0), lookup(register_data, 'registers', []))
+    def process_input(self, input_data):
+        input = Input(
+            lookup(input_data, 'alphabet'), lookup(input_data, 'count'), lookup(input_data, 'sample'))
 
-def process_input(input_data):
-    input = Input(
-        lookup(input_data, 'alphabet'), lookup(input_data, 'count'), lookup(input_data, 'sample'))
+        return input
 
-    return input
-
-def process_goal(goal_data):
-    print("fomula: {}".format(lookup(goal_data, 'formula')))
-    return Goal(
-        lookup(goal_data, 'formula'), lookup(goal_data, 'size'),
-        lookup(goal_data, 'speed'), lookup(goal_data, 'expected'))
+    def process_goal(self, goal_data):
+        # print("fomula: {}".format(lookup(goal_data, 'formula')))
+        return Goal(
+            lookup(goal_data, 'formula'), lookup(goal_data, 'size'),
+            lookup(goal_data, 'speed'), lookup(goal_data, 'expected'))
 
