@@ -4,6 +4,7 @@ from collections import namedtuple
 
 Step = namedtuple('step', "line command inbox holding registers outbox comment")
 
+
 # TODO: I think this relationship needs a change
 class Ledger(object):
 
@@ -11,11 +12,9 @@ class Ledger(object):
         self.steps = []
         self.level = level_obj
         self.solution = solution_obj
-
         self.goal = self.level.goal
         self.initial_state = None
         self.error_state = None
-
         self.iter = 0
 
     def capture_init_state(self, l_input, registers, name='start'):
@@ -66,17 +65,12 @@ class Ledger(object):
             if command.val:
                 cmd = cmd + " " + command.val
 
-            state_table.add_row([
-                self.iter + 1,
-                line + 1,
-                cmd,
-                step.inbox,
-                step.holding,
-                step.registers,
-                step.outbox,
-                command.comment or '',
-            ])
             self.iter += 1
+
+            state_table.add_row([
+                self.iter, line + 1, cmd, step.inbox, step.holding,
+                step.registers, step.outbox, command.comment or ''
+            ])
 
         ledger_str = str(state_table)
         if self.error_state:
