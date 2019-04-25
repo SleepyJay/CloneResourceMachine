@@ -1,11 +1,10 @@
 
 from Game import Game
-from prettytable import PrettyTable
 
 # todo test available vs commands
 # todo input builder
 # todo fix regsiter setup
-# todo solution confirmer
+# todo program confirmer
 # todo edge case: protect against numerical lables that scramble command list...
 # todo allow non-numeric labels for registers (easier than command list, since dict)
 
@@ -25,7 +24,7 @@ test_data = {
         'count' : 2
     },
     'name': 'TESTING',
-    'solutions': {
+    'programs': {
         'a': {
             'commands': [
                 'foo: inbox',
@@ -46,7 +45,7 @@ test_data = {
 }
 
 game = Game()
-game.load_level_file('levels/game.yaml')
+game.load_multi_level_file('levels/game.yaml')
 # game.load_level_file('levels/game_16.yaml')
 # game.load_level_data('test_data', test_data)
 

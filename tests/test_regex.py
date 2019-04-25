@@ -1,6 +1,6 @@
 
 import unittest
-from Roboto.Level import RE_cmd, Command
+from Level import RE_cmd, Command
 from collections import namedtuple
 
 TestItem = namedtuple("TestItem", ['input', 'expected'])
