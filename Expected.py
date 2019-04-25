@@ -3,25 +3,26 @@ from functools import partial
 from JAGpy.Numbers import has_sign, is_int
 from JAGpy.Structs import lookup
 
+
 class Expected(object):
 
-    def __init__(self, solution, goal):
-        self.solution = solution
+    def __init__(self, program, goal):
+        self.program = program
         self.goal = goal
 
         self.size = 0
         self.speed = 0
         self.output = []
 
-        if solution.size is None:
+        if program.size is None:
             self.size = self.goal.size
         else:
-            self.size = solution.size
+            self.size = program.size
 
-        if solution.speed is None:
+        if program.speed is None:
             self.speed = self.goal.speed
         else:
-            self.speed = solution.speed
+            self.speed = program.speed
 
     def predict_output(self, formula, input):
         fn = FORMULAS[formula]
@@ -31,8 +32,10 @@ class Expected(object):
 def fn_identity(items):
     return items
 
+
 def fn_just_respond(response, items):
     return response
+
 
 def fn_subtact_both(items):
     result = []
@@ -41,8 +44,10 @@ def fn_subtact_both(items):
 
     return result
 
+
 def fn_None():
     return None
+
 
 def fn_reverse_two(items):
     result = []
@@ -51,6 +56,7 @@ def fn_reverse_two(items):
 
     return result
 
+
 def fn_equal_pairs(items):
     result = []
     for a, b in zip(items[0::2], items[1::2]):
@@ -58,6 +64,7 @@ def fn_equal_pairs(items):
             result.append(a)
 
     return result
+
 
 def fn_max_of_pairs(items):
     result = []
@@ -69,12 +76,14 @@ def fn_max_of_pairs(items):
 
     return result
 
+
 def fn_multiply_pairs(items):
     result = []
     for a, b in zip(items[0::2], items[1::2]):
         result.append(a * b)
 
     return result
+
 
 def fn_sign_of_pairs(items):
     result = []
@@ -89,6 +98,7 @@ def fn_sign_of_pairs(items):
 
     return result
 
+
 def fn_multiply_by(by, items):
     result = []
     for a in items:
@@ -96,12 +106,14 @@ def fn_multiply_by(by, items):
 
     return result
 
+
 def fn_keep_when_zero(items):
     result = []
     for a in items:
         if a == 0:
             result.append(a)
     return result
+
 
 def fn_keep_when_not_zero(items):
     result = []
@@ -111,12 +123,14 @@ def fn_keep_when_not_zero(items):
 
     return result
 
+
 def fn_abs(items):
     result = []
     for a in items:
         result.append(abs(a))
 
     return result
+
 
 def fn_count_to_zero(items):
     result = []
@@ -132,6 +146,7 @@ def fn_count_to_zero(items):
             result.extend(vals)
     return result
 
+
 def fn_sum_until_zero(items):
     result = []
     cur_sum = 0
@@ -142,6 +157,7 @@ def fn_sum_until_zero(items):
             cur_sum = 0
 
     return result
+
 
 FORMULAS = {
     '() => “BUG”': partial(fn_just_respond, ['B','U','G']),

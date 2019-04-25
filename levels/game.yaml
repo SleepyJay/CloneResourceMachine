@@ -14,11 +14,10 @@ levels:
                 - E
                 - 0
         goal:
-            type: identity
             formula: for $a => $a
             size: 6
             speed: 6
-        solutions:
+        programs:
             optimal:
                 commands:
                     - inbox
@@ -40,7 +39,7 @@ levels:
             formula: for $a => $a
             size: 3
             speed: 25
-        solutions:
+        programs:
             fast:
                 size: 24
                 speed: 20
@@ -83,7 +82,7 @@ levels:
                 3: G
                 4: B
                 5: E
-        solutions:
+        programs:
             optimal:
                 commands:
                     - copyfrom 4
@@ -109,7 +108,7 @@ levels:
             speed: 21
         registers:
             count: 3
-        solutions:
+        programs:
             optimal:
                 commands:
                     - inbox
@@ -149,7 +148,7 @@ levels:
         goal:
             size: 6
             speed: 24
-        solutions:
+        programs:
             optimal:
                 commands:
                     - inbox
@@ -186,7 +185,7 @@ levels:
             speed: 23
         registers:
             count: 9
-        solutions:
+        programs:
             optimal:
                 commands:
                     - inbox
@@ -216,7 +215,7 @@ levels:
             formula: for ($a) => $a * 3
             size: 6
             speed: 24
-        solutions:
+        programs:
             optimal:
                 commands:
                     - inbox
@@ -253,7 +252,7 @@ levels:
             formula: for ($a) => if 0
             size: 5
             speed: 25
-        solutions:
+        programs:
             small:
                 speed: 28
                 size: 5
@@ -299,7 +298,7 @@ levels:
             speed: 36
         registers:
             count: 5
-        solutions:
+        programs:
             optimal:
                 commands:
                     - inbox
@@ -340,7 +339,7 @@ levels:
             speed: 40
         registers:
             count: 3
-        solutions:
+        programs:
             optimal:
                 commands:
                     - inbox
@@ -376,7 +375,7 @@ levels:
             speed: 56
         registers:
             count: 5
-        solutions:
+        programs:
             optimal:
                 commands:
                     - inbox
@@ -420,7 +419,7 @@ levels:
             speed: 27
         registers:
             count: 3
-        solutions:
+        programs:
             optimal:
                 commands:
                     - jump 4
@@ -462,7 +461,7 @@ levels:
             speed: 34
         registers:
             count: 3
-        solutions:
+        programs:
             optimal:
                 speed: 31
                 commands:
@@ -508,7 +507,7 @@ levels:
             speed: 36
         registers:
             count: 3
-        solutions:
+        programs:
             optimal:
                 speed: 34
                 commands:
@@ -553,7 +552,7 @@ levels:
             values:
                 4: 0
                 5: 0
-        solutions:
+        programs:
             small:
                 speed: 29
                 commands:
@@ -618,7 +617,7 @@ levels:
             speed: 82
         registers:
             count: 10
-        solutions:
+        programs:
             small:
                 speed: 122
                 commands:
@@ -690,7 +689,7 @@ levels:
                 T: ''
                 S: ''
                 9: 0
-        solutions:
+        programs:
             small:
                 speed:
                 commands:
@@ -777,7 +776,7 @@ levels:
             count: 6
             values:
                 5: 0
-        solutions:
+        programs:
 #            small:
 #                speed:
 #                commands:

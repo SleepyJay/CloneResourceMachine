@@ -5,7 +5,7 @@ from Input import Input
 from Goal import Goal
 import re
 
-Solution = namedtuple('solution', 'key commands size speed labels')
+Program = namedtuple('program', 'key commands size speed labels')
 Command = namedtuple('command', 'line name val label comment')
 Registers = namedtuple('registers', 'count values')
 
@@ -24,27 +24,29 @@ class Level(object):
         self.goal = self.process_goal(lookup(data, 'goal'))
         self.input = self.process_input(lookup(data, 'input'))
         self.registers = self.process_registers(lookup(data, 'registers'))
-        self.solutions = self.process_solutions(lookup(data, 'solutions'))
+        self.programs = self.process_programs(lookup(data, 'programs'))
 
         # list of input tried
         self.inboxes = []
 
-    def get_solution(self, key):
-        sol = lookup(self.solutions, key)
+        sol = lookup(self.programs, key)
 
         if not sol and (key == 'fast' or key == 'small'):
-            sol = lookup(self.solutions, 'optimal')
+            sol = lookup(self.programs, 'optimal')
 
         return sol
 
-    def process_solutions(self, solutions_data):
-        solutions = dict()
+    def process_programs(self, programs_data):
+        if self.is_movie:
+            return
 
-        for key, solution in solutions_data.items():
+        programs = dict()
+
+        for key, program in programs_data.items():
             pre_commands = []
 
             # expand any repeats
-            for cmd_item in solution['commands']:
+            for cmd_item in program['commands']:
                 if type(cmd_item) is dict:
                     cmd_repeat = cmd_item['repeat']
                     count = cmd_repeat['count']
@@ -78,12 +80,12 @@ class Level(object):
 
                 ln += 1
 
-            size = lookup(solution, 'size', self.goal.size)
-            speed = lookup(solution, 'speed', self.goal.speed)
+            size = lookup(program, 'size', self.goal.size)
+            speed = lookup(program, 'speed', self.goal.speed)
 
-            solutions[key] = Solution(key, commands, size, speed, labels)
+            programs[key] = Program(key, commands, size, speed, labels)
 
-        return solutions
+        return programs
 
     def process_registers(self, register_data):
         if not register_data:
@@ -98,7 +100,9 @@ class Level(object):
         return input
 
     def process_goal(self, goal_data):
-        # print("fomula: {}".format(lookup(goal_data, 'formula')))
+        if self.is_movie:
+            return
+
         return Goal(
             lookup(goal_data, 'formula'), lookup(goal_data, 'size'),
             lookup(goal_data, 'speed'), lookup(goal_data, 'expected'))

@@ -35,17 +35,19 @@ class Game(object):
         self.create_ledger()
 
     def restart(self, l_input=None):
-        level = self.engine.level_obj
-        solution_key = self.engine.solution_key
+        if self.current_level.is_movie:
+            return
 
-        self.engine = Engine(level, solution_key, l_input)
+        program_key = self.engine.program_key
+
+        self.engine = Engine(self.current_level, program_key, l_input)
         self.create_ledger()
 
     def create_ledger(self):
         if self.ledger:
             self.ledgers.append(self.ledger)
 
-        self.ledger = Ledger(self.current_level, self.engine.solution)
+        self.ledger = Ledger(self.current_level, self.engine.program)
         self.ledger.capture_init_state(self.engine.input, self.engine.registers)
         self.engine.ledger = self.ledger
 

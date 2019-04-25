@@ -8,10 +8,10 @@ Step = namedtuple('step', "line command inbox holding registers outbox comment")
 # TODO: I think this relationship needs a change
 class Ledger(object):
 
-    def __init__(self, level_obj, solution_obj):
+    def __init__(self, level_obj, program_obj):
         self.steps = []
         self.level = level_obj
-        self.solution = solution_obj
+        self.program = program_obj
         self.goal = self.level.goal
         self.initial_state = None
         self.error_state = None
@@ -120,11 +120,11 @@ class Ledger(object):
         return str(goal_table)
 
     def get_size(self):
-        return len(self.solution.commands)
+        return len(self.program.commands)
 
     def get_speed(self):
         return len(self.steps)
 
     def __repr__(self):
         return "=== {} - {} : {}\n".format(
-            self.level.name, self.level.key, self.solution.key) + self.get_result_table()
+             self.level.key, self.level.name, self.program.key) + self.get_result_table()

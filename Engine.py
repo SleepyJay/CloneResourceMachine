@@ -26,25 +26,25 @@ from Ledger import Ledger
 from Expected import Expected
 
 # Engine runs one level at a time
-# Can run same or different solutions over and over
+# Can run same or different programs over and over
 # Ledger stores each run for this level
 
 class Engine(object):
 
-    def __init__(self, level_obj, solution_key, l_input=None):
+    def __init__(self, level_obj, program_key, l_input=None):
         self.level_obj = level_obj
-        self.solution_key = solution_key
-        self.solution = level_obj.get_solution(solution_key)
+        self.program_key = program_key
+        self.program = level_obj.get_program(program_key)
         self.goal = level_obj.goal
 
         self.input = l_input or self.create_input(level_obj.input)
         self.registers = build_registers(level_obj.registers)
 
-        self.command_list = self.solution.commands
+        self.command_list = self.program.commands
         self.output = []
         self.expected = None
 
-        self.labels = self.solution.labels
+        self.labels = self.program.labels
 
         self.next = None
         self.cur_command = ''
@@ -57,10 +57,10 @@ class Engine(object):
         return input_obj.build_new_sample()
 
     def step(self, command=None):
-        if self.next >= len(self.solution.commands):
+        if self.next >= len(self.program.commands):
             return None
 
-        command = self.solution.commands[self.next]
+        command = self.program.commands[self.next]
 
         self.next += 1
 
@@ -157,7 +157,7 @@ class Engine(object):
                 self.error_bad_jump()
                 return
 
-        if val >= len(self.solution.commands):
+        if val >= len(self.program.commands):
             self.error_bad_jump()
             return
 
@@ -181,7 +181,7 @@ class Engine(object):
         if self.expected:
             return self.expected
 
-        self.expected = Expected(self.solution, self.goal)
+        self.expected = Expected(self.program, self.goal)
 
 
 def build_registers(registers_obj):
