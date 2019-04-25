@@ -31,7 +31,13 @@ class Game(object):
         level = self.catalog.get_level(level_key)
         self.current_level = level
 
-        self.engine = Engine(level, solution_key, l_input)
+    def start_new(self, level_key, program_key, l_input=None):
+        self.current_level = self.catalog.get_level(level_key)
+
+        if self.current_level.is_movie:
+            return
+
+        self.engine = Engine(self.current_level, program_key, l_input)
         self.create_ledger()
 
     def restart(self, l_input=None):
@@ -52,6 +58,10 @@ class Game(object):
         self.engine.ledger = self.ledger
 
     def run(self):
+        if self.current_level.is_movie:
+            self.play_movie(self.current_level)
+            return
+
         i = 0
         while self.engine.step() and i < MAX_ITERS:
             i += 1
@@ -60,6 +70,10 @@ class Game(object):
         return self.engine.get_ledger()
 
     def step(self, to_line=None):
+        if self.current_level.is_movie:
+            self.play_movie(self.current_level)
+            return
+
         i = 0
         if to_line and i < MAX_ITERS:
             while self.engine.cur_line != to_line and self.engine.step():
@@ -69,9 +83,17 @@ class Game(object):
 
     # TODO: implement this
     def step_back(self, to_line=None):
+        if self.current_level.is_movie:
+            self.play_movie(self.current_level)
+            return
+
         print("not yet implemented")
 
     def confirm(self, l_output=None):
+        if self.current_level.is_movie:
+            self.play_movie(self.current_level)
+            return
+
         return self.engine.confirm_result(l_output)
 
     def get_ledger(self):
@@ -82,3 +104,6 @@ class Game(object):
 
     def get_outbox(self):
         return self.engine.output
+
+    def play_movie(self, level):
+        print("Level Movie: '{} - {}'".format(level.key, level.name))

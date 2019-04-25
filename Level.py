@@ -19,15 +19,30 @@ class Level(object):
         self.original_data = data
         self.key = str(key)
         self.name = lookup(data, 'name')
-        self.available = lookup(data, 'available', [])
+        self.is_movie = lookup(data, 'movie')
 
+        self.available = []
+        self.goal = None
+        self.input = None
+        self.registers = None
+        self.programs = None
+        self.inboxes = []        # list of input tried
+
+        self.process_data(data)
+
+    def process_data(self, data):
+        if self.is_movie:
+            return
+
+        self.available = lookup(data, 'available', [])
         self.goal = self.process_goal(lookup(data, 'goal'))
         self.input = self.process_input(lookup(data, 'input'))
         self.registers = self.process_registers(lookup(data, 'registers'))
         self.programs = self.process_programs(lookup(data, 'programs'))
 
-        # list of input tried
-        self.inboxes = []
+    def get_program(self, key):
+        if self.is_movie:
+            return None
 
         sol = lookup(self.programs, key)
 
@@ -88,12 +103,18 @@ class Level(object):
         return programs
 
     def process_registers(self, register_data):
+        if self.is_movie:
+            return
+
         if not register_data:
             return Registers(0, [])
 
         return Registers(lookup(register_data, 'count', 0), lookup(register_data, 'registers', []))
 
     def process_input(self, input_data):
+        if self.is_movie:
+            return
+
         input = Input(
             lookup(input_data, 'alphabet'), lookup(input_data, 'count'), lookup(input_data, 'sample'))
 
