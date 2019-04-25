@@ -15,21 +15,25 @@ class Game(object):
         self.ledgers = []
         self.ledger = None
 
-    def load_level_file(self, filename):
+    #
+    def load_single_level_file(self, filename):
         if not self.catalog:
             self.catalog = Catalog()
 
-        self.catalog.load_file(filename)
+        self.catalog.load_single_file(filename)
 
-    def load_level_data(self, key, data):
+    #
+    def load_multi_level_file(self, filename):
         if not self.catalog:
             self.catalog = Catalog()
 
-        self.catalog.load_data(key, data)
+        self.catalog.load_multi_file(filename)
 
-    def start_new(self, level_key, solution_key, l_input=None):
-        level = self.catalog.get_level(level_key)
-        self.current_level = level
+    def load_level_data(self, data):
+        if not self.catalog:
+            self.catalog = Catalog()
+
+        self.catalog.load_data(data)
 
     def start_new(self, level_key, program_key, l_input=None):
         self.current_level = self.catalog.get_level(level_key)

@@ -1,7 +1,6 @@
 
 import yaml
 from Level import Level
-from JAGpy.Structs import lookup
 
 
 class Catalog (object):
@@ -9,21 +8,22 @@ class Catalog (object):
     def __init__(self):
         self.levels = dict()
     
-    def load_file(self, filename):
-        f = open(filename, 'r')
-        data = yaml.safe_load(f)
+    def load_multi_file(self, filename):
+        data = read_yaml(filename)
+        self.load_data(data['levels'])
 
-        for key, values in data['levels'].items():
-            is_movie = lookup(values, 'movie')
+    def load_single_file(self, filename):
+        data = read_yaml(filename)
+        self.load_data(data)
 
-            if is_movie:
-                # Todo: something fancy with movies?
-                continue
-
-            self.load_data(key, values)
-
-    def load_data(self, key, data):
-        self.levels[key] = Level(key, data)
+    def load_data(self, data):
+        for key, values in data.items():
+            self.levels[key] = Level(key, values)
 
     def get_level(self, level_key):
         return self.levels[level_key]
+
+
+def read_yaml(filename):
+    f = open(filename, 'r')
+    return yaml.safe_load(f)
