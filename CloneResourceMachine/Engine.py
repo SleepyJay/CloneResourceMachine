@@ -38,7 +38,7 @@ class Engine(object):
         self.goal = level_obj.goal
 
         self.input = l_input or self.create_input(level_obj.input)
-        self.registers = build_registers(level_obj.registers)
+        self.registers = self.build_registers(level_obj.registers)
 
         self.command_list = self.program.commands
         self.output = []
@@ -56,7 +56,7 @@ class Engine(object):
     def create_input(self, input_obj):
         return input_obj.build_new_sample()
 
-    def step(self, command=None):
+    def step(self):
         if self.next >= len(self.program.commands):
             return None
 
@@ -164,13 +164,6 @@ class Engine(object):
         else:
             self.next = val - 1
 
-    # TODO: implement this
-    def confirm_result(self, l_output=None):
-        result = 'unknown'
-        self.ledger.result = result
-
-        return result
-
     def get_ledger(self):
         return self.ledger
 
@@ -183,17 +176,18 @@ class Engine(object):
 
         self.expected = Expected(self.program, self.goal)
 
+    def build_registers(self, registers_obj):
+        registers = []
 
-def build_registers(registers_obj):
-    registers = []
+        # build a list of registers, with any starting values filled in...
+        for r in range(0, registers_obj.count):
+            registers.append('')
 
-    # build a list of registers, with any starting values filled in...
-    for r in range(0, registers_obj.count):
-        registers.append('')
+        if registers_obj.values:
+            for key in registers_obj.values:
+                registers[key] = registers_obj.values[key]
 
-    if registers_obj.values:
-        for key in registers_obj.values:
-            registers[key] = registers_obj.values[key]
+        return registers
 
-    return registers
-
+    def finish(self):
+        pass

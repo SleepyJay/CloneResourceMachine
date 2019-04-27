@@ -15,14 +15,12 @@ class Game(object):
         self.ledgers = []
         self.ledger = None
 
-    #
     def load_single_level_file(self, filename):
         if not self.catalog:
             self.catalog = Catalog()
 
         self.catalog.load_single_file(filename)
 
-    #
     def load_multi_level_file(self, filename):
         if not self.catalog:
             self.catalog = Catalog()
@@ -70,7 +68,8 @@ class Game(object):
         while self.engine.step() and i < MAX_ITERS:
             i += 1
 
-        self.engine.confirm_result()
+        self.engine.finish()
+
         return self.engine.get_ledger()
 
     def step(self, to_line=None):
@@ -93,9 +92,8 @@ class Game(object):
 
         print("not yet implemented")
 
-    def confirm(self, l_output=None):
+    def confirm_result(self, l_output=None):
         if self.current_level.is_movie:
-            self.play_movie(self.current_level)
             return
 
         return self.engine.confirm_result(l_output)
