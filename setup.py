@@ -1,27 +1,18 @@
-from setuptools import setup
 
-setup(name='JAGpy',
-      version='0.3',
-      packages=['CloneResouceMachine'],
-      dependency_links=[
-            'https://github.com/SleepyJay/JAGpy',
-      ],
-      install_requires=[
-            'prettytable',
-            'JAGpy',
-            'PyYAML'
-      ],
-      )
+import os
+import urllib.request
 
 
-# description = 'JAGpy Library Code',
-# url = 'https://github.com/SleepyJay/JAGpy',
-# author = 'SleepyJay',
-# author_email = 'sleepyjay@d20green.com',
-# packages = [
-#                  'JAGpy'
-#            ],
-# install_requires = [
-#                          'JAGpy',
-#                    ],
-# zip_safe = False)
+print(os.getcwd())
+
+if not os.path.exists('JAGpy'):
+    os.mkdir('JAGpy')
+
+url = 'https://github.com/SleepyJay/JAGpy/blob/master/README.md'
+urllib.request.urlretrieve(url, os.path.join(os.getcwd(), 'JAGpy', 'README.md'))
+
+os.system('pip install -r requirements.txt')
+
+
+
+

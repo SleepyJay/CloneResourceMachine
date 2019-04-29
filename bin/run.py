@@ -1,5 +1,5 @@
 
-from Game import Game
+from CloneResourceMachine.Game import Game
 
 # todo test available vs commands
 # todo input builder
