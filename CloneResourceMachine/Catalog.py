@@ -1,6 +1,6 @@
 
 import yaml
-from Level import Level
+from CloneResourceMachine.Level import Level
 
 
 class Catalog (object):

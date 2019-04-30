@@ -1,10 +1,10 @@
 
-from random import shuffle, choice, randint
+from random import shuffle, choice
 
 ALPHABET = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-POSITIVE = range(1, 10)
-NEGATIVE = range(-9, 0)
-ZERO = [0]
+POSITIVE = list(range(1, 10))
+NEGATIVE = list(range(-9, 0))
+ZERO = ['0']
 
 THINGS = dict(P=POSITIVE, N=NEGATIVE, Z=[0], A=ALPHABET)
 
@@ -40,7 +40,7 @@ class Input(object):
                 mix += THINGS[a]
 
         while count > 0:
-            new_sample.append(choice(mix))
+            new_sample.append(str(choice(mix)))
             count -= 1
 
         shuffle(new_sample)

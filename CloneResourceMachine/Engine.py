@@ -22,8 +22,8 @@
     #[] `expected $x`
     #[] `input $x`
 
-from Ledger import Ledger
-from Expected import Expected
+from CloneResourceMachine.Ledger import Ledger
+from CloneResourceMachine.Expected import Expected
 
 # Engine runs one level at a time
 # Can run same or different programs over and over

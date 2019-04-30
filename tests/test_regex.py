@@ -1,6 +1,6 @@
 
 import unittest
-from Level import RE_cmd, Command
+from CloneResourceMachine.Level import RE_cmd, Command
 from collections import namedtuple
 
 TestItem = namedtuple("TestItem", ['input', 'expected'])

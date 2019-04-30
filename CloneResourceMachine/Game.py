@@ -1,7 +1,7 @@
 
-from Engine import Engine
-from Catalog import Catalog
-from Ledger import Ledger
+from CloneResourceMachine.Engine import Engine
+from CloneResourceMachine.Catalog import Catalog
+from CloneResourceMachine.Ledger import Ledger
 
 MAX_ITERS = 1000
 

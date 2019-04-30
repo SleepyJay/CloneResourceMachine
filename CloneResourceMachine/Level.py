@@ -1,8 +1,8 @@
 
 from collections import namedtuple
 from JAGpy.Structs import lookup
-from Input import Input
-from Goal import Goal
+from CloneResourceMachine.Input import Input
+from CloneResourceMachine.Goal import Goal
 import re
 
 Program = namedtuple('program', 'key commands size speed labels')
