@@ -1,6 +1,7 @@
 
 from random import shuffle, choice
 
+#alphabet = list(string.ascii_lowercase)
 ALPHABET = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 POSITIVE = list(range(1, 10))
 NEGATIVE = list(range(-9, 0))
