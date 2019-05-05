@@ -1,8 +1,8 @@
 
 from random import shuffle, choice
+import string
 
-#alphabet = list(string.ascii_lowercase)
-ALPHABET = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+ALPHABET = list(string.ascii_uppercase)
 POSITIVE = list(range(1, 10))
 NEGATIVE = list(range(-9, 0))
 ZERO = ['0']
@@ -12,20 +12,20 @@ THINGS = dict(P=POSITIVE, N=NEGATIVE, Z=[0], A=ALPHABET)
 
 class Input(object):
 
-    def __init__(self, alphabet='', count=0, sample=[]):
+    def __init__(self, alphabet='', count=0, sample=None):
         self.alphabet = alphabet
         self.count = count
-        self.sample = sample
+        self.sample = sample or []
 
         self.prev_samples = []
 
-    # Todo: really build new sample
     def build_new_sample(self):
-        self.prev_samples.append(self.sample)
+        if self.sample:
+            self.prev_samples.append(self.sample)
         new_sample = []
 
         if self.alphabet == 'none':
-            self.sample = new_sample
+            self.sample = []
             return self.sample
 
         alphas = self.alphabet.split(' ')
@@ -56,14 +56,18 @@ class Input(object):
 def get_alike(val):
     pass
 
+
 def get_rand_integer():
     return choice(POSITIVE + NEGATIVE)
+
 
 def get_rand_positive():
     return choice(POSITIVE)
 
+
 def get_rand_letter():
     return choice(ALPHABET)
+
 
 def get_rand_letter_num():
     return choice(POSITIVE + ALPHABET + [0])

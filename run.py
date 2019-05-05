@@ -55,5 +55,4 @@ game.start_new(2, 'fast')
 
 ledger = game.run()
 print(ledger)
-
-print(ledger.get_goal_table(game.get_outbox()))
+print(ledger.get_goal_table())

@@ -22,8 +22,8 @@
     #[] `expected $x`
     #[] `input $x`
 
-from CloneResourceMachine.Ledger import Ledger
 from CloneResourceMachine.Expected import Expected
+from JAGpy.Structs import lookup
 
 # Engine runs one level at a time
 # Can run same or different programs over and over
@@ -37,10 +37,14 @@ class Engine(object):
         self.program = level_obj.get_program(program_key)
         self.goal = level_obj.goal
 
-        self.input = l_input or self.create_input(level_obj.input)
+        self.input = l_input or level_obj.input.build_new_sample()
         self.registers = self.build_registers(level_obj.registers)
 
         self.command_list = self.program.commands
+        bad_command = self.check_commands()
+        if bad_command:
+            self.error_bad_command(bad_command)
+
         self.output = []
         self.expected = None
 
@@ -52,9 +56,15 @@ class Engine(object):
         self.next = 0
         self.ledger = None
 
-    # TODO: finish this
-    def create_input(self, input_obj):
-        return input_obj.build_new_sample()
+    def check_commands(self, command_list=None):
+        command_list = command_list or self.command_list
+
+        command_set = set(command_list)
+
+        for cmd in command_set:
+            ok = lookup(command_set, cmd)
+            if not ok:
+                return cmd
 
     def step(self):
         if self.next >= len(self.program.commands):
@@ -67,7 +77,10 @@ class Engine(object):
         if command is None:
             return None
 
-        if command.name == 'inbox':
+        if command.name == 'echo':
+            pass
+
+        elif command.name == 'inbox':
             if self.input:
                 self.cur_item = self.input.pop(0)
             else:
@@ -137,6 +150,9 @@ class Engine(object):
 
     # These "error_" methods are "soft" errors, like a "halting warning", really.
 
+    def error_bad_command(self, bad_command):
+        self.ledger.capture_error_state(f"Error: Bad command found: {bad_command}")
+
     def error_no_current_item(self):
         self.ledger.capture_error_state('Error: No current item!')
 
@@ -190,4 +206,4 @@ class Engine(object):
         return registers
 
     def finish(self):
-        pass
+        return self.ledger

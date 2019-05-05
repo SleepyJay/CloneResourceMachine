@@ -68,9 +68,7 @@ class Game(object):
         while self.engine.step() and i < MAX_ITERS:
             i += 1
 
-        self.engine.finish()
-
-        return self.engine.get_ledger()
+        return self.engine.finish()
 
     def step(self, to_line=None):
         if self.current_level.is_movie:
@@ -83,14 +81,6 @@ class Game(object):
                 i += 1
         else:
             return self.engine.step()
-
-    # TODO: implement this
-    def step_back(self, to_line=None):
-        if self.current_level.is_movie:
-            self.play_movie(self.current_level)
-            return
-
-        print("not yet implemented")
 
     def confirm_result(self, l_output=None):
         if self.current_level.is_movie:

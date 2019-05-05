@@ -94,13 +94,13 @@ class Ledger(object):
         if actual_speed <= goal.speed:
             speed_res = 'FAST'
         elif actual_speed != self.goal.speed:
-            speed_res = 'slow?'
+            speed_res = '(slow?)'
 
         size_res = ''
         if actual_size <= goal.size:
             size_res = 'SMALL'
         elif actual_size != self.goal.size:
-            size_res = 'long?'
+            size_res = '(long?)'
 
         goal_table = PrettyTable([
             'type', 'goal', 'expected', 'actual', 'boxes', 'result'

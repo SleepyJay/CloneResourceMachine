@@ -12,6 +12,7 @@ Registers = namedtuple('registers', 'count values')
 # parse something like [label:] cur_command [value] [# comment]
 RE_cmd = re.compile(r'(?:(?P<lbl>\w+):)?\s*(?P<cmd>\w+)\s*(?P<val>\w+)?\s*(?P<cmt>[#]\s*.*)?')
 
+ALWAYS_AVAILABLE = ['echo']
 
 class Level(object):
 
@@ -35,6 +36,7 @@ class Level(object):
             return
 
         self.available = lookup(data, 'available', [])
+        self.available.extend(ALWAYS_AVAILABLE)
         self.goal = self.process_goal(lookup(data, 'goal'))
         self.input = self.process_input(lookup(data, 'input'))
         self.registers = self.process_registers(lookup(data, 'registers'))

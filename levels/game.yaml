@@ -20,6 +20,7 @@ levels:
         programs:
             optimal:
                 commands:
+                    - echo this should show up, but not be counted in 'size'
                     - inbox
                     - outbox
                     - inbox
