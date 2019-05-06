@@ -20,7 +20,6 @@ levels:
         programs:
             optimal:
                 commands:
-                    - echo this should show up, but not be counted in 'size'
                     - inbox
                     - outbox
                     - inbox
@@ -45,6 +44,7 @@ levels:
                 size: 24
                 speed: 20
                 commands:
+                    - echo this should show up, but not be counted in 'size'
                     - repeat:
                         count: 12
                         commands:
@@ -53,6 +53,7 @@ levels:
             small:
                 speed: 30
                 commands:
+                    - echo this should show up, but not be counted in 'size'
                     - inbox
                     - outbox
                     - jump 1

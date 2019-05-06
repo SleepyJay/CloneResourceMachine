@@ -11,7 +11,7 @@ Registers = namedtuple('registers', 'count values')
 
 # parse something like [label:] cur_command [value] [# comment]
 RE_cmd = re.compile(r'(?:(?P<lbl>\w+):)?\s*(?P<cmd>\w+)\s*(?P<val>\w+)?\s*(?P<cmt>[#]\s*.*)?')
-
+RE_echo = re.compile(r'(echo)\s+(.*)')
 ALWAYS_AVAILABLE = ['echo']
 
 
@@ -41,7 +41,7 @@ class Level(object):
         self.goal = self.process_goal(lookup(data, 'goal'))
         self.input = self.process_input(lookup(data, 'input'))
         self.registers = self.process_registers(lookup(data, 'registers'))
-        self.programs = self.process_programs(lookup(data, 'programs'))
+        self.programs = self.process_programs(lookup(data, 'programs', dict()))
 
     def get_program(self, key):
         if self.is_movie:
@@ -79,14 +79,7 @@ class Level(object):
             commands = []
 
             for str_cmd in pre_commands:
-                # just stripping any comments (for now?)
-                if str_cmd.startswith('#'):
-                    continue
-
-                m = RE_cmd.match(str_cmd)
-                (cmd, val, lbl, cmt) = m.group('cmd', 'val', 'lbl', 'cmt')
-
-                command = Command(ln, cmd, val, lbl, cmt)
+                command = self.process_str_command(ln, str_cmd)
 
                 if not command:
                     continue
@@ -105,6 +98,22 @@ class Level(object):
 
         return programs
 
+    def process_str_command(self, ln, str_cmd):
+        # just stripping any comments (for now?)
+        if str_cmd.startswith('#'):
+            return
+
+        m = RE_cmd.match(str_cmd)
+        (cmd, val, lbl, cmt) = m.group('cmd', 'val', 'lbl', 'cmt')
+
+        if cmd == 'echo':
+            m = RE_echo.match(str_cmd)
+            (cmd, val) = m.groups()
+
+        command = Command(ln, cmd, val, lbl, cmt)
+
+        return command
+
     def process_registers(self, register_data):
         if self.is_movie:
             return
@@ -118,13 +127,19 @@ class Level(object):
         if self.is_movie:
             return
 
-        input = Input(
+        if not input_data:
+            return
+
+        input_obj = Input(
             lookup(input_data, 'alphabet'), lookup(input_data, 'count'), lookup(input_data, 'sample'))
 
-        return input
+        return input_obj
 
     def process_goal(self, goal_data):
         if self.is_movie:
+            return
+
+        if not goal_data:
             return
 
         return Goal(

@@ -131,10 +131,22 @@ class Ledger(object):
         return str(goal_table)
 
     def get_size(self):
-        return len(self.program.commands)
+        size = 0
+        for cmd in self.program.commands:
+            if cmd.name == 'echo':
+                continue
+            size += 1
+
+        return size
 
     def get_speed(self):
-        return len(self.steps)
+        speed = 0
+        for step in self.steps:
+            if step.command.name == 'echo':
+                continue
+            speed += 1
+
+        return speed
 
     def capture_end_state(self, l_input, outbox):
         # line command inbox holding registers outbox comment
