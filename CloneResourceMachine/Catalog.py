@@ -26,4 +26,6 @@ class Catalog (object):
 
 def read_yaml(filename):
     f = open(filename, 'r')
-    return yaml.safe_load(f)
+    data = yaml.safe_load(f)
+    f.close()
+    return data
