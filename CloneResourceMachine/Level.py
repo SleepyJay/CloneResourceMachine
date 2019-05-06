@@ -1,6 +1,7 @@
 
 from collections import namedtuple
 from JAGpy.Structs import lookup
+from JAGpy.Numbers import intify
 from CloneResourceMachine.Input import Input
 from CloneResourceMachine.Goal import Goal
 import re
@@ -121,7 +122,12 @@ class Level(object):
         if not register_data:
             return Registers(0, [])
 
-        return Registers(lookup(register_data, 'count', 0), lookup(register_data, 'registers', []))
+        values = lookup(register_data, 'values', [])
+
+        for key in values:
+            values[key] = intify(values[key])
+
+        return Registers(lookup(register_data, 'count', 0), values)
 
     def process_input(self, input_data):
         if self.is_movie:

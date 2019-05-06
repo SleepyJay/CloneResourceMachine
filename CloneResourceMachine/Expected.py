@@ -34,7 +34,7 @@ def fn_identity(items):
     return items
 
 
-def fn_just_respond(response, items):
+def fn_just_respond(response, items=None):
     return response
 
 
@@ -160,6 +160,14 @@ def fn_sum_until_zero(items):
     return result
 
 
+def fn_sum_pairs(items):
+    result = []
+    for a, b in zip(items[0::2], items[1::2]):
+        result.append(a + b)
+
+    return result
+
+
 FORMULAS = {
     '() => “BUG”': partial(fn_just_respond, ['B','U','G']),
     'for ($a, $b) => ($b - $a, $a - $b)': fn_subtact_both,
@@ -177,4 +185,5 @@ FORMULAS = {
     'for $a => abs($a)': fn_abs,
     'for $a => each ($a to 0)': fn_count_to_zero,
     'for $a => sum(each $a until 0)': fn_sum_until_zero,
+    'for ($a, $b) => sum($a, $b)': fn_sum_pairs,
 }

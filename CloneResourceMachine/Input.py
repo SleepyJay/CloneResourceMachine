@@ -1,6 +1,7 @@
 
 from random import shuffle, choice
 import string
+from JAGpy.Numbers import intify
 
 ALPHABET = list(string.ascii_uppercase)
 POSITIVE = list(range(1, 10))
@@ -45,7 +46,7 @@ class Input(object):
             count -= 1
 
         shuffle(new_sample)
-        self.sample = new_sample
+        self.sample = [intify(x) for x in new_sample]
 
         return self.sample
 

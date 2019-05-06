@@ -144,12 +144,12 @@ levels:
                 - 1
                 - 9
                 - -3
-        formula: for ($a, $b) => ($b + $a)
         registers:
             count: 3
         goal:
             size: 6
             speed: 24
+            formula: for ($a, $b) => sum($a, $b)
         programs:
             optimal:
                 commands:
