@@ -1,6 +1,6 @@
 
 import unittest
-from Expected import FORMULAS
+from CloneResourceMachine.Expected import FORMULAS
 from collections import namedtuple
 
 
@@ -10,7 +10,7 @@ class Test_Expected(unittest.TestCase):
         Test = namedtuple('test', "input expected")
 
         tests = {
-            '() => “BUG”': Test(list('GOUNDERBED'), ['B','U','G']),
+            '() => “BUG”': Test(list('GOUNDERBED'), ['B','U','G']), # "GO UNDER BED" :)
             'for ($a, $b) => ($b - $a, $a - $b)': Test([1,2 ,3,0, 2,8], [1,-1, -3,3, 6,-6]),
             'for ($a, $b) => ($b, $a)': Test(list('ABCDEF'), list('BADCFE')),
             'for ($a, $b) => $(a|b) if $a == $b': Test(list('AABC0E'), ['A']),
