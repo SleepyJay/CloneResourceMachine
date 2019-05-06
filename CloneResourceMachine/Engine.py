@@ -22,7 +22,6 @@
     #[] `expected $x`
     #[] `input $x`
 
-from CloneResourceMachine.Expected import Expected
 from JAGpy.Structs import lookup
 
 # Engine runs one level at a time
@@ -38,6 +37,7 @@ class Engine(object):
         self.goal = level_obj.goal
 
         self.input = l_input or level_obj.input.build_new_sample()
+        self.initial_input = self.input.copy()
         self.registers = self.build_registers(level_obj.registers)
 
         self.command_list = self.program.commands
@@ -46,7 +46,7 @@ class Engine(object):
             self.error_bad_command(bad_command)
 
         self.output = []
-        self.expected = None
+        self.goal.prepare_expected(self.program)
 
         self.labels = self.program.labels
 
@@ -186,12 +186,6 @@ class Engine(object):
     def get_goal(self):
         return self.goal
 
-    def get_expected(self):
-        if self.expected:
-            return self.expected
-
-        self.expected = Expected(self.program, self.goal)
-
     def build_registers(self, registers_obj):
         registers = []
 
@@ -206,4 +200,6 @@ class Engine(object):
         return registers
 
     def finish(self):
+        self.ledger.capture_end_state(self.input, self.output)
+        self.goal.expected.predict_output(self.goal.formula, self.initial_input)
         return self.ledger

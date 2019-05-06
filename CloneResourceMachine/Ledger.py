@@ -14,7 +14,9 @@ class Ledger(object):
         self.program = program_obj
         self.goal = self.level.goal
         self.initial_state = None
+        self.ending_state = None
         self.error_state = None
+        self.outbox = []
         self.iter = 0
 
     def capture_init_state(self, l_input, registers, name='start'):
@@ -72,6 +74,12 @@ class Ledger(object):
                 step.registers, step.outbox, command.comment or ''
             ])
 
+        final = self.ending_state
+        state_table.add_row([
+            '', final.line, final.command, final.inbox,
+            final.holding, final.registers, final.outbox, ''
+        ])
+
         ledger_str = str(state_table)
         if self.error_state:
             print(self.error_state)
@@ -81,14 +89,17 @@ class Ledger(object):
 
     def get_goal_table(self, outbox=None):
         goal = self.goal
-        exp_output = str(goal.expected)
+        exp_output = goal.expected.output
         actual_speed = self.get_speed()
         actual_size = self.get_size()
+        outbox = outbox or self.outbox
 
+        print("exp({}): {}".format(type(exp_output), exp_output))
+        print("act({}): {}".format(type(outbox), outbox))
         if exp_output == outbox:
-            passing = 'FAIL'
-        else:
             passing = 'PASS'
+        else:
+            passing = 'FAIL'
 
         speed_res = ''
         if actual_speed <= goal.speed:
@@ -103,7 +114,7 @@ class Ledger(object):
             size_res = '(long?)'
 
         goal_table = PrettyTable([
-            'type', 'goal', 'expected', 'actual', 'boxes', 'result'
+            'type', 'goal', 'expected', 'actual', 'in/out boxes', 'result'
         ])
 
         for n in ['type', 'boxes', 'result']:
@@ -124,6 +135,11 @@ class Ledger(object):
 
     def get_speed(self):
         return len(self.steps)
+
+    def capture_end_state(self, l_input, outbox):
+        # line command inbox holding registers outbox comment
+        self.outbox = outbox
+        self.ending_state = Step('', 'end', str(l_input), '', str([]), outbox, '')
 
     def __repr__(self):
         return "=== {} - {} : {}\n".format(

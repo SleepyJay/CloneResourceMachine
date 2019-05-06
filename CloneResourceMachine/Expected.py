@@ -24,9 +24,10 @@ class Expected(object):
         else:
             self.speed = program.speed
 
-    def predict_output(self, formula, input):
+    def predict_output(self, formula, l_input):
         fn = FORMULAS[formula]
-        return fn(input)
+        self.output = fn(l_input)
+        return self.output
 
 
 def fn_identity(items):

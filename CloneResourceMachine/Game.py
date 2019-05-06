@@ -39,8 +39,7 @@ class Game(object):
         if self.current_level.is_movie:
             return
 
-        self.engine = Engine(self.current_level, program_key, l_input)
-        self.create_ledger()
+        self._build_new_engine(program_key, l_input)
 
     def restart(self, l_input=None):
         if self.current_level.is_movie:
@@ -48,10 +47,11 @@ class Game(object):
 
         program_key = self.engine.program_key
 
-        self.engine = Engine(self.current_level, program_key, l_input)
-        self.create_ledger()
+        self._build_new_engine(program_key, l_input)
 
-    def create_ledger(self):
+    def _build_new_engine(self, program_key, l_input):
+        self.engine = Engine(self.current_level, program_key, l_input)
+
         if self.ledger:
             self.ledgers.append(self.ledger)
 

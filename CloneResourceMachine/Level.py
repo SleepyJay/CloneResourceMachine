@@ -14,6 +14,7 @@ RE_cmd = re.compile(r'(?:(?P<lbl>\w+):)?\s*(?P<cmd>\w+)\s*(?P<val>\w+)?\s*(?P<cm
 
 ALWAYS_AVAILABLE = ['echo']
 
+
 class Level(object):
 
     def __init__(self, key, data):
