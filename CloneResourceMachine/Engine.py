@@ -111,7 +111,7 @@ class Engine(object):
             if self.cur_item is None:
                 self.error_no_current_item()
             elif not isinstance(self.cur_item, int):
-                self.error_bad_input()
+                pass
             elif self.cur_item == 0:
                 self.do_jump(command.val)
 

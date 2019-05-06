@@ -151,7 +151,7 @@ class Ledger(object):
     def capture_end_state(self, l_input, outbox):
         # line command inbox holding registers outbox comment
         self.outbox = outbox
-        self.ending_state = Step('', 'end', str(l_input), '', str([]), outbox, '')
+        self.ending_state = Step('', 'end', str(l_input), '', '', outbox, '')
 
     def __repr__(self):
         return "=== {} - {} : {}\n".format(

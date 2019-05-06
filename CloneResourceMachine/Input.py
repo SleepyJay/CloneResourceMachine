@@ -6,7 +6,6 @@ from JAGpy.Numbers import intify
 ALPHABET = list(string.ascii_uppercase)
 POSITIVE = list(range(1, 10))
 NEGATIVE = list(range(-9, 0))
-ZERO = ['0']
 
 THINGS = dict(P=POSITIVE, N=NEGATIVE, Z=[0], A=ALPHABET)
 
@@ -36,7 +35,9 @@ class Input(object):
         for a in alphas:
             if len(a) > 1:
                 (item, rep) = list(a)
-                new_sample.extend(list(item * rep))
+                rep = int(rep)
+                for i in range(0, rep):
+                    new_sample.extend(THINGS[item])
                 count -= rep
             else:
                 mix += THINGS[a]

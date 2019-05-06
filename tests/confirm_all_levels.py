@@ -11,15 +11,26 @@ class Test_ConfirmTests(unittest.TestCase):
         game.load_multi_level_file('../levels/game.yaml')
 
         for key, values in game.catalog.levels.items():
-            if int(key) > 6:
+            if int(key) > 16:
                 break
 
             for goal_type in ('fast', 'small'):
-                print(f"Testing {key}-{goal_type}")
-
                 game.start_new(key, goal_type)
+
+                if game.current_level.is_movie:
+                    goal_formula = 'MOVIE'
+                else:
+                    goal_formula = game.current_level.goal.formula
+
+                print(f"Testing {key}-{goal_type}: {goal_formula}")
+
                 ledger = game.run()
                 level_key = game.current_level.key
+
+                if game.current_level.is_movie:
+                    pass
+                else:
+                    print("{} => {}".format(game.engine.initial_input, game.engine.output))
                 
                 if game.current_level.is_movie:
                     print(f"skipping movie: {level_key}")
