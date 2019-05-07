@@ -39,6 +39,7 @@ class Level(object):
 
         self.available = lookup(data, 'available', [])
         self.available.extend(ALWAYS_AVAILABLE)
+
         self.goal = self.process_goal(lookup(data, 'goal'))
         self.input = self.process_input(lookup(data, 'input'))
         self.registers = self.process_registers(lookup(data, 'registers'))
@@ -151,4 +152,5 @@ class Level(object):
         return Goal(
             lookup(goal_data, 'formula'), lookup(goal_data, 'size'),
             lookup(goal_data, 'speed'), lookup(goal_data, 'expected'))
+
 
