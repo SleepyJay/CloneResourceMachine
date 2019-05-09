@@ -11,7 +11,7 @@ Command = namedtuple('command', 'line name val label comment')
 Registers = namedtuple('registers', 'count values')
 
 # parse something like [label:] cur_command [value] [# comment]
-RE_cmd = re.compile(r'(?:(?P<lbl>\w+):)?\s*(?P<cmd>\w+)\s*(?P<val>\w+)?\s*(?P<cmt>[#]\s*.*)?')
+RE_cmd = re.compile(r'(?:(?P<lbl>\w+):)?\s*(?P<cmd>[\w+-]+)\s*(?P<val>\w+)?\s*(?P<cmt>[#]\s*.*)?')
 RE_echo = re.compile(r'(echo)\s+(.*)')
 ALWAYS_AVAILABLE = ['echo']
 
@@ -68,13 +68,16 @@ class Level(object):
             # expand any repeats
             for cmd_item in program['commands']:
                 if type(cmd_item) is dict:
-                    cmd_repeat = cmd_item['repeat']
-                    count = cmd_repeat['count']
+                    cmd_repeat = lookup(cmd_item, 'repeat')
+                    if cmd_repeat:
+                        count = cmd_repeat['count']
 
-                    for i in range(0, count):
-                        pre_commands.extend(cmd_repeat['commands'])
-                else:
-                    pre_commands.append(cmd_item)
+                        for i in range(0, count):
+                            pre_commands.extend(cmd_repeat['commands'])
+
+                        continue
+
+                pre_commands.append(cmd_item)
 
             ln = 0
             labels = dict()
@@ -125,8 +128,10 @@ class Level(object):
 
         values = lookup(register_data, 'values', [])
 
+        new_vals = dict()
+
         for key in values:
-            values[key] = intify(values[key])
+            new_vals[str(key)] = values[key]
 
         return Registers(lookup(register_data, 'count', 0), values)
 

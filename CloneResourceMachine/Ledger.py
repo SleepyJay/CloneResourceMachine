@@ -117,16 +117,18 @@ class Ledger(object):
             'type', 'goal', 'expected', 'actual', 'in/out boxes', 'result'
         ])
 
-        for n in ['type', 'boxes', 'result']:
+        for n in ['type', 'in/out boxes', 'result']:
             goal_table.align[n] = 'l'
 
         for n in ['goal', 'expected', 'actual']:
             goal_table.align[n] = 'r'
 
+        expect_size = self.program.size or self.goal.size
+        expect_speed = self.program.speed or self.goal.speed
         goal_table.add_row(['input', '', '', '', self.initial_state.inbox, ''])
         goal_table.add_row([goal.formula, '', '', '', str(outbox), passing])
-        goal_table.add_row(['size', goal.size, goal.size, actual_size, '', size_res ])
-        goal_table.add_row(['speed', goal.speed, goal.speed, actual_speed, '', speed_res])
+        goal_table.add_row(['size', goal.size, expect_size, actual_size, '', size_res ])
+        goal_table.add_row(['speed', goal.speed, expect_speed, actual_speed, '', speed_res])
 
         return str(goal_table)
 

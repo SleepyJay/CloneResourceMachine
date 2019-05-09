@@ -78,12 +78,12 @@ levels:
         registers:
             count: 6
             values:
-                0: U
-                1: J
-                2: X
-                3: G
-                4: B
-                5: E
+                '0': U
+                '1': J
+                '2': X
+                '3': G
+                '4': B
+                '5': E
         programs:
             optimal:
                 commands:
@@ -189,6 +189,7 @@ levels:
             count: 9
         programs:
             optimal:
+                speed: 24
                 commands:
                     - inbox
                     - jumpzero 1
@@ -269,12 +270,13 @@ levels:
                 speed: 24
                 commands:
                     - inbox         # 1
-                    - jumpzero 8
+                    - jumpzero 9
                     - inbox
-                    - jumpzero 8
+                    - jumpzero 9
                     - inbox
-                    - jumpzero 8
+                    - jumpzero 9
                     - inbox
+                    - jumpzero 9
                     - outbox        # 8
                     - jump 1
     10:
@@ -350,10 +352,10 @@ levels:
                     - copyto 1
                     - sub 0
                     - outbox
-                    - copy from 0
+                    - copyfrom 0
                     - sub 1
                     - outbox
-                    - jump 0
+                    - jump 1
     12:
         name: Tetracontiplier
         available:
@@ -391,7 +393,7 @@ levels:
                          commands:
                              - add 0
                     - outbox
-                    - jump
+                    - jump 1
     13:
         name: Equalization Room
         available:
@@ -465,7 +467,8 @@ levels:
             count: 3
         programs:
             optimal:
-                speed: 31
+                avg_speed: 31
+                speed: 33
                 commands:
                     - jump 4
                     - copyfrom 0
@@ -511,7 +514,8 @@ levels:
             count: 3
         programs:
             optimal:
-                speed: 34
+                avg_speed: 34
+                speed: 41
                 commands:
                     - jump 6
                     - copyto 0
@@ -547,16 +551,17 @@ levels:
                 - 8
         goal:
             formula: for ($a, $b) => same_sign($a, $b) then 0 else 1
-            size: 8
-            speed: 36
+            size: 12
+            speed: 28
         registers:
             count: 6
             values:
-                4: 0
-                5: 0
+                '4': 0
+                '5': 1
         programs:
             small:
-                speed: 29
+                avg_speed: 29
+                speed: 32
                 commands:
                     - jump 4            # 1
                     - copyfrom 4
@@ -572,7 +577,8 @@ levels:
                     - jump 3
             fast:
                 size: 14
-                speed: 28
+                avg_speed: 28
+                speed: 32
                 commands:
                     - jump 7
                     - copyfrom 4
@@ -630,12 +636,13 @@ levels:
                     - jumpzero 1
                     - jumpneg 9
                     - bump- 0
-                    - jump 10
+                    - jump 3
                     - bump+ 0
                     - jump 3
             fast:
                 size: 14
-                speed: 80
+                avg_speed: 80
+                speed: 160 # need to fix averaging
                 commands:
                     - jump 3
                     - outbox
@@ -666,7 +673,7 @@ levels:
             - jumpzero
             - jumpneg
         input:
-            alphabet: P N Z
+            alphabet: P Z
             count: 10
             sample:
                 - 2
@@ -686,56 +693,62 @@ levels:
         registers:
             count: 10
             values:
-                N: ''
-                i: ''
-                T: ''
-                S: ''
-                9: 0
+                'N': ''
+                'i': ''
+                'T': ''
+                'S': ''
+                '9': 0
         programs:
             small:
-                speed:
+                speed: 135
                 commands:
-                    - inbox
-                    - copyto 0
-                    - outbox
-                    - copyfrom 0
-                    - jumpzero 1
-                    - jumpneg 9
-                    - bump- 0
-                    - jump 10
-                    - bump+ 0
-                    - jump 3
-            fast:
-                size: 27
-                speed: 109
-                commands:
-                    - jump
-                    - inbox
-                    - copyfrom 9
-                    - jump
+                    - jump 4
                     - copyfrom T
                     - outbox
                     - inbox
-                    - jumpzero
-                    - copyto S
-                    - copyto i
-                    - inbox
-                    - jumpzero
-                    - sub S
-                    - jumpneg
-                    - add S
-                    - jump
-                    - add S
-                    - copyto i
-                    - copyfrom S
                     - copyto N
                     - copyto T
+                    - inbox
+                    - jumpzero 3
+                    - copyto i
                     - bump- i
-                    - jumpzero
+                    - jumpzero 2
                     - copyfrom N
                     - add T
                     - copyto T
-                    - jump
+                    - jump 10
+            fast:
+                size: 27
+                avg_speed: 109
+                speed: 300
+                commands:
+                    - jump 7
+                    - inbox
+                    - copyfrom 9
+                    - jump 6
+                    - copyfrom T # 5
+                    - outbox
+                    - inbox # 7
+                    - jumpzero 2
+                    - copyto S
+                    - copyto i
+                    - inbox
+                    - jumpzero 3
+                    - sub S
+                    - jumpneg 17
+                    - add S
+                    - jump 20
+                    - add S # 17
+                    - copyto i
+                    - copyfrom S
+                    - copyto N # 20
+                    - copyto T
+                    - bump- i # 22
+                    - jumpzero 5
+                    - copyfrom N
+                    - add T
+                    - copyto T
+                    - jump 22
     21:
         name: Zero Terminated Sum
         available:
@@ -785,7 +798,8 @@ levels:
 
             fast:
                 size: 11
-                speed: 68
+                avg_speed: 68
+                speed: 80
                 commands:
                     - jump 4
                     - copyfrom 0

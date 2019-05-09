@@ -95,14 +95,13 @@ class Engine(object):
                 self.cur_item = None
 
         elif command.name == 'copyfrom':
-            # TODO: maybe should confirm this is a number?
-            self.cur_item = self.registers[int(command.val)]
+            self.cur_item = self.registers[command.val]
 
         elif command.name == 'copyto':
             if self.cur_item is None:
                 self.error_no_current_item()
             else:
-                self.registers[int(command.val)] = self.cur_item
+                self.registers[command.val] = self.cur_item
 
         elif command.name == 'jump':
             self.do_jump(command.val)
@@ -124,18 +123,18 @@ class Engine(object):
                self.do_jump(command.val)
 
         elif command.name == 'add':
-            self.cur_item += self.registers[int(command.val)]
+            self.cur_item += self.registers[command.val]
 
         elif command.name == 'sub':
-            self.cur_item -= self.registers[int(command.val)]
+            self.cur_item -= self.registers[command.val]
 
         elif command.name == 'bump+':
             self.cur_item = self.registers[command.val] + 1
-            self.registers[int(command.val)] = self.cur_item
+            self.registers[command.val] = self.cur_item
 
         elif command.name == 'bump-':
             self.cur_item = self.registers[command.val] - 1
-            self.registers[int(command.val)] = self.cur_item
+            self.registers[command.val] = self.cur_item
 
         else:
             return None
@@ -157,8 +156,8 @@ class Engine(object):
     def error_no_current_item(self):
         self.ledger.capture_error_state('Error: No current item!')
 
-    def error_bad_jump(self):
-        self.ledger.capture_error_state('Error: Cannot jump there!')
+    def error_bad_jump(self, val):
+        self.ledger.capture_error_state(f"Error: Cannot jump to {val}!")
 
     def error_bad_input(self):
         self.ledger.capture_error_state('Error: Cannot use that value ({})!'.format(self.cur_item))
@@ -171,11 +170,11 @@ class Engine(object):
             try:
                 val = int(val)
             except:
-                self.error_bad_jump()
+                self.error_bad_jump(val)
                 return
 
         if val >= len(self.program.commands):
-            self.error_bad_jump()
+            self.error_bad_jump(val)
             return
 
         else:
@@ -188,15 +187,19 @@ class Engine(object):
         return self.goal
 
     def build_registers(self, registers_obj):
-        registers = []
+        registers = dict()
 
-        # build a list of registers, with any starting values filled in...
-        for r in range(0, registers_obj.count):
-            registers.append('')
+        values_set = 0
 
         if registers_obj.values:
+            values_set = len(registers_obj.values)
+
             for key in registers_obj.values:
                 registers[key] = registers_obj.values[key]
+
+        # # build a list of registers, with any starting values filled in...
+        # for r in range(0, registers_obj.count):
+        #     registers[r].
 
         return registers
 

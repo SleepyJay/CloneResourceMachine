@@ -49,10 +49,18 @@ game.load_multi_level_file('levels/game.yaml')
 # game.load_level_file('levels/game_16.yaml')
 # game.load_level_data('test_data', test_data)
 
-game.start_new(2, 'fast')
-# game.start_new(2, 'small')
-#print(game.ledger)
-
+game.start_new(21, 'fast')
+# game.start_new(20, 'small')
 ledger = game.run()
+
+# for i in range(0,1):
+#     game.start_new(7, 'fast', ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'])
+#     ledger = game.run()
+#     speed = ledger.get_speed()
+#     print(f"{ledger.initial_state.inbox} ==> {speed}")
+#     if game.ledger.error_state:
+#         print(game.ledger.error_state)
+
+
 print(ledger)
 print(ledger.get_goal_table())
