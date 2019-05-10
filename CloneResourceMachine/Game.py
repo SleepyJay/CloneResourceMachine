@@ -71,13 +71,7 @@ class Game(object):
         self.ledger.capture_init_state(self.engine.input, self.engine.registers)
         self.engine.ledger = self.ledger
 
-        self.confirm_available()
 
-    def confirm_available(self):
-        program = self.engine.program
-        for cmd in program.commands:
-            if cmd.name not in self.current_level.available:
-                self.engine.error_bad_command(cmd.name)
 
     def run(self):
         if self.current_level.is_movie:
