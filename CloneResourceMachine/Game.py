@@ -96,6 +96,8 @@ class Game(object):
         else:
             return self.engine.step()
 
+    def play_movie(self, level):
+        print("Level Movie: '{} - {}'".format(level.key, level.name))
     def confirm_result(self, l_output=None):
         if self.current_level.is_movie:
             return
@@ -111,5 +113,3 @@ class Game(object):
     def get_outbox(self):
         return self.engine.output
 
-    def play_movie(self, level):
-        print("Level Movie: '{} - {}'".format(level.key, level.name))
