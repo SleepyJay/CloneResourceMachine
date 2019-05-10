@@ -10,7 +10,7 @@ class Test_ConfirmTests(unittest.TestCase):
         game = Game()
         game.load_multi_level_file('../levels/game.yaml')
 
-        for key, values in game.catalog.levels.items():
+        for key, values in game.levels.items():
             if int(key) > 20:
                 break
 

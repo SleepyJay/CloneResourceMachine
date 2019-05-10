@@ -9,11 +9,11 @@ class Catalog (object):
         self.levels = dict()
     
     def load_multi_file(self, filename):
-        data = read_yaml(filename)
+        data = self.read_yaml(filename)
         self.load_data(data['levels'])
 
     def load_single_file(self, filename):
-        data = read_yaml(filename)
+        data = self.read_yaml(filename)
         self.load_data(data)
 
     def load_data(self, data):
@@ -23,9 +23,9 @@ class Catalog (object):
     def get_level(self, level_key):
         return self.levels[level_key]
 
-
-def read_yaml(filename):
-    f = open(filename, 'r')
-    data = yaml.safe_load(f)
-    f.close()
-    return data
+    @staticmethod
+    def read_yaml(filename):
+        f = open(filename, 'r')
+        data = yaml.safe_load(f)
+        f.close()
+        return data

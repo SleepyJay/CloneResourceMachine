@@ -9,32 +9,44 @@ MAX_ITERS = 1000
 class Game(object):
 
     def __init__(self):
+        # This object is really only to abstract the YAML parsing into Levels,
+        # no need to expose it anywhere.
+        self.__catalog = None
         self.engine = None
-        self.catalog = None
+
         self.current_level = None
         self.ledgers = []
         self.ledger = None
 
-    def load_single_level_file(self, filename):
-        if not self.catalog:
-            self.catalog = Catalog()
+    @property
+    def levels(self):
+        return self.__catalog.levels
 
-        self.catalog.load_single_file(filename)
+    def load_single_level_file(self, filename):
+        if not self.__catalog:
+            self.__catalog = Catalog()
+
+        self.__catalog.load_single_file(filename)
 
     def load_multi_level_file(self, filename):
-        if not self.catalog:
-            self.catalog = Catalog()
+        if not self.__catalog:
+            self.__catalog = Catalog()
 
-        self.catalog.load_multi_file(filename)
+        self.__catalog.load_multi_file(filename)
 
     def load_level_data(self, data):
-        if not self.catalog:
-            self.catalog = Catalog()
+        if not self.__catalog:
+            self.__catalog = Catalog()
 
-        self.catalog.load_data(data)
+        self.__catalog.load_data(data)
+
+
+
+
+
 
     def start_new(self, level_key, program_key, l_input=None):
-        self.current_level = self.catalog.get_level(level_key)
+        self.current_level = self.__catalog.get_level(level_key)
 
         if self.current_level.is_movie:
             return
