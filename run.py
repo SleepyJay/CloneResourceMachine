@@ -1,13 +1,6 @@
 
 from CloneResourceMachine.Game import Game
 
-# todo test available vs commands
-# todo input builder
-# todo fix regsiter setup
-# todo program confirmer
-# todo edge case: protect against numerical lables that scramble command list...
-# todo allow non-numeric labels for registers (easier than command list, since dict)
-
 test_data = {
     'available': ['inbox', 'outbox', 'jump'],
     'goal': {
@@ -46,12 +39,15 @@ test_data = {
 
 game = Game()
 game.load_multi_level_file('levels/game.yaml')
+
 # game.load_level_file('levels/game_16.yaml')
 # game.load_level_data('test_data', test_data)
 
-game.start_new(21, 'fast')
-# game.start_new(20, 'small')
-ledger = game.run()
+level_1 = game.levels['1']
+
+#game.start_new(1, 'fast')
+# # game.start_new(20, 'small')
+# ledger = game.run()
 
 # for i in range(0,1):
 #     game.start_new(7, 'fast', ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'])
@@ -62,5 +58,5 @@ ledger = game.run()
 #         print(game.ledger.error_state)
 
 
-print(ledger)
-print(ledger.get_goal_table())
+# print(ledger)
+# print(ledger.get_goal_table())

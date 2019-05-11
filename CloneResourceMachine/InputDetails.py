@@ -1,7 +1,9 @@
 
 from random import shuffle, choice
+from collections import namedtuple
 import string
 from JAGpy.Numbers import intify
+from JAGpy.Structs import lookup
 
 ALPHABET = list(string.ascii_uppercase)
 POSITIVE = list(range(1, 10))
@@ -10,18 +12,17 @@ NEGATIVE = list(range(-9, 0))
 THINGS = dict(P=POSITIVE, N=NEGATIVE, Z=[0], A=ALPHABET)
 
 
-class Input(object):
+class InputDetails(object):
 
-    def __init__(self, alphabet='', count=0, sample=None):
-        self.alphabet = alphabet
-        self.count = count
-        self.sample = sample or []
+    def __init__(self, data):
+        self.alphabet = lookup(data, 'alphabet', '')
+        self.count = lookup(data, 'count', 0)
+        self.sample = lookup(data, 'sample', [])
+        self.descrete = []
 
-        self.prev_samples = []
+        self.process_discrete(lookup(data, 'discrete'))
 
     def build_new_sample(self):
-        if self.sample:
-            self.prev_samples.append(self.sample)
         new_sample = []
 
         if self.alphabet == 'none':
@@ -51,12 +52,16 @@ class Input(object):
 
         return self.sample
 
+    def process_discrete(self, discrete):
+        if discrete is None:
+            return
+
+        for dis in discrete:
+            dis_list = dis.split(' ')
+            self.descrete.append(dis_list)
+
     def __repr__(self):
         return str(dict(alphabet=self.alphabet, count=self.count, sample=self.sample))
-
-
-def get_alike(val):
-    pass
 
 
 def get_rand_integer():

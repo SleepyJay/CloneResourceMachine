@@ -191,6 +191,8 @@ class Engine(object):
 
         values_set = 0
 
+        print(registers_obj)
+
         if registers_obj.values:
             values_set = len(registers_obj.values)
 

@@ -2,7 +2,7 @@
 from collections import namedtuple
 from JAGpy.Structs import lookup
 from JAGpy.Numbers import intify
-from CloneResourceMachine.Input import Input
+from CloneResourceMachine.InputDetails import InputDetails
 from CloneResourceMachine.Program import Program
 
 Registers = namedtuple('registers', 'count values')
@@ -58,13 +58,13 @@ class Level(object):
         for key in values:
             new_vals[str(key)] = values[key]
 
-        return Registers(lookup(register_data, 'count', 0), new_vals)
+        self.registers = Registers(lookup(register_data, 'count', 0), new_vals)
 
     def process_input(self, input_data):
         if not input_data:
             return
 
-        self.input = Input(input_data)
+        self.input = InputDetails(input_data)
 
     def process_goal(self, goal_data):
         if not goal_data:

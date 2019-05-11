@@ -21,6 +21,7 @@ class Test_ConfirmTests(unittest.TestCase):
 
         level_1 = levels[1]
         self.assertTrue(level_1, "Level 1 exists")
+        self.assertTrue(level_1.registers, 'Level 1 has registers')
 
         level_3 = levels[3]
         self.assertTrue(level_3, "Level 3 exists")

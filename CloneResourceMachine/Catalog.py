@@ -18,10 +18,10 @@ class Catalog (object):
 
     def load_data(self, data):
         for key, values in data.items():
-            self.levels[key] = Level(key, values)
+            self.levels[str(key)] = Level(str(key), values)
 
     def get_level(self, level_key):
-        return self.levels[level_key]
+        return self.levels[str(level_key)]
 
     @staticmethod
     def read_yaml(filename):
