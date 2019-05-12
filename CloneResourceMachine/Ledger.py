@@ -1,32 +1,43 @@
 
 from prettytable import PrettyTable
 from collections import namedtuple
+from CloneResourceMachine.Expected import Expected
 
 Step = namedtuple('step', "line command inbox holding registers outbox comment")
 
 
-# TODO: I think this relationship needs a change
 class Ledger(object):
 
-    def __init__(self, level_obj, program_obj):
+    def __init__(self, level_obj, program_obj, list_input=None):
         self.steps = []
         self.level = level_obj
         self.program = program_obj
-        self.goal = self.level.goal
+
         self.initial_state = None
         self.ending_state = None
         self.error_state = None
-        self.outbox = []
+
+        self.input = None
+        self.expected = None
         self.iter = 0
 
-    def capture_init_state(self, l_input, registers, name='start'):
-        self.initial_state = Step('', name, str(l_input), '', str(registers), [], '')
+        self._build_input(list_input)
+
+    def _build_input(self, list_input=None):
+        if not list_input:
+            list_input = self.level.get_new_sample()
+
+        self.input = list_input
+        self.expected = Expected(self.level.get_formula(), self.input)
+
+    def capture_init_state(self, registers, name='start'):
+        self.initial_state = Step('', name, str(self.input), '', str(registers), [], '')
 
     def capture_error_state(self, message):
         self.error_state = message
 
-    def capture_state(self, engine, command=None):
-        command = command or engine.cur_command
+    def capture_state(self, engine):
+        command = engine.cur_command
         line = engine.next
 
         if line is None:
@@ -88,10 +99,10 @@ class Ledger(object):
         return ledger_str
 
     def get_goal_table(self, outbox=None):
-        goal = self.goal
-        exp_output = goal.expected.output
+        goal = self.level.goal
+        exp_output = self.expected.output
         actual_speed = self.get_speed()
-        actual_size = self.get_size()
+        actual_size = self.program.get_size()
         outbox = outbox or self.outbox
 
         print("exp({}): {}".format(type(exp_output), exp_output))
@@ -104,13 +115,13 @@ class Ledger(object):
         speed_res = ''
         if actual_speed <= goal.speed:
             speed_res = 'FAST'
-        elif actual_speed != self.goal.speed:
+        elif actual_speed != goal.speed:
             speed_res = '(slow?)'
 
         size_res = ''
         if actual_size <= goal.size:
             size_res = 'SMALL'
-        elif actual_size != self.goal.size:
+        elif actual_size != goal.size:
             size_res = '(long?)'
 
         goal_table = PrettyTable([
@@ -123,23 +134,14 @@ class Ledger(object):
         for n in ['goal', 'expected', 'actual']:
             goal_table.align[n] = 'r'
 
-        expect_size = self.program.size or self.goal.size
-        expect_speed = self.program.speed or self.goal.speed
-        goal_table.add_row(['input', '', '', '', self.initial_state.inbox, ''])
+        expect_size = self.program.size or goal.size
+        expect_speed = self.program.speed or goal.speed
+        goal_table.add_row(['input_details', '', '', '', self.initial_state.inbox, ''])
         goal_table.add_row([goal.formula, '', '', '', str(outbox), passing])
         goal_table.add_row(['size', goal.size, expect_size, actual_size, '', size_res ])
         goal_table.add_row(['speed', goal.speed, expect_speed, actual_speed, '', speed_res])
 
         return str(goal_table)
-
-    def get_size(self):
-        size = 0
-        for cmd in self.program.commands:
-            if cmd.name == 'echo':
-                continue
-            size += 1
-
-        return size
 
     def get_speed(self):
         speed = 0

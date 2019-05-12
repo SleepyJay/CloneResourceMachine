@@ -1,71 +1,43 @@
 
-# Lets support these commands:
-    #[] `inbox` : get item from inbox
-    #[] `outbox`: put item into outbox
-    #[] `copyfrom $r`: copy value from register $r
-    #[] `copyto $r`: copy value to register $r
-    #[] `jump $p|$l`: jump to program line number or label
-    #[] `jump_zero $p|$l`
-    #[] `jump_neg $p|$l`
-    #[] `add`
-    #[] `sub`
-    #[] `echo $m`
-    #[] `# $m`
-    #[] `@l`
-
-# Config
-    #[] `registers $n`
-    #[] `alphabet $a`
-    #[] `goal_instructions $n`
-    #[] `goal_runtime $n`
-    #[] `instruct_set $a`
-    #[] `expected $x`
-    #[] `input $x`
-
 from JAGpy.Structs import lookup
 
 # Engine runs one level at a time
 # Can run same or different programs over and over
-# Ledger stores each run for this level
+# Ledger stores each program run for each input
 
 
 class Engine(object):
 
-    def __init__(self, level_obj, program_key, l_input=None):
-        self.level_obj = level_obj
-        self.program_key = program_key
-        self.program = level_obj.get_program(program_key)
-        self.goal = level_obj.goal
+    def __init__(self, level, program, ledger):
+        self.level = level
+        self.program = program
+        self.ledger = ledger
+        self.input = ledger.input.copy()
+        self.labels = program.labels
 
-        self.input = l_input or level_obj.input.build_new_sample()
-        self.initial_input = self.input.copy()
-        self.registers = self.build_registers(level_obj.registers)
-
-        self.command_list = self.program.commands
-        bad_command = self.check_commands()
-        if bad_command:
-            self.error_bad_command(bad_command)
-
-        self.output = []
-        self.goal.prepare_expected(self.program)
-
-        self.labels = self.program.labels
-
-        self.next = None
-        self.cur_command = ''
+        self.commands = program.commands
+        self.cur_command = None
         self.cur_item = None
         self.next = 0
-        self.ledger = None
+        self.output = []
+        self.registers = None
 
-    def check_commands(self, command_list=None):
-        command_list = command_list or self.command_list
+        self.build_registers(level.registers)
 
-        command_set = set(command_list)
+        ledger.capture_init_state(self.registers)
 
-        for cmd in command_set:
-            ok = lookup(command_set, cmd)
-            if not ok:
-                return cmd
+    def build_registers(self, registers_obj):
+        if not registers_obj:
+            return
+
+        self.registers = dict()
+
+        for r in range(0, registers_obj.count):
+            str_r = str(r)
+            if str_r in registers_obj.values:
+                self.registers[str_r] = registers_obj.values[str_r]
+            else:
+                self.registers[str_r] = ''
 
     def step(self):
         if self.next >= len(self.program.commands):
@@ -180,32 +152,6 @@ class Engine(object):
         else:
             self.next = val - 1
 
-    def get_ledger(self):
-        return self.ledger
-
-    def get_goal(self):
-        return self.goal
-
-    def build_registers(self, registers_obj):
-        registers = dict()
-
-        values_set = 0
-
-        print(registers_obj)
-
-        if registers_obj.values:
-            values_set = len(registers_obj.values)
-
-            for key in registers_obj.values:
-                registers[key] = registers_obj.values[key]
-
-        # # build a list of registers, with any starting values filled in...
-        # for r in range(0, registers_obj.count):
-        #     registers[r].
-
-        return registers
-
     def finish(self):
         self.ledger.capture_end_state(self.input, self.output)
-        self.goal.expected.predict_output(self.goal.formula, self.initial_input)
         return self.ledger

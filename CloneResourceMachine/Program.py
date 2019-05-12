@@ -27,6 +27,9 @@ class Program(object):
         self.process_data(data)
 
     def process_data(self, data):
+        if not data:
+            return
+
         pre_commands = []
 
         # expand any repeats
@@ -66,6 +69,16 @@ class Program(object):
 
         self.size = lookup(data, 'size', 0)
         self.speed = lookup(data, 'speed', 0)
+
+    # We don't count all commands (like `echo` in this size...
+    def get_size(self):
+        size = 0
+        for cmd in self.commands:
+            if cmd.name == 'echo':
+                continue
+            size += 1
+
+        return size
 
     @staticmethod
     def process_str_command(ln, str_cmd):

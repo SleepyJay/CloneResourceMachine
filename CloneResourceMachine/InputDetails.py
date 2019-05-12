@@ -22,7 +22,7 @@ class InputDetails(object):
 
         self.process_discrete(lookup(data, 'discrete'))
 
-    def build_new_sample(self):
+    def get_new_sample(self):
         new_sample = []
 
         if self.alphabet == 'none':

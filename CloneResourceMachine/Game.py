@@ -15,6 +15,7 @@ class Game(object):
         self.engine = None
 
         self.current_level = None
+        self.program = None
         self.ledgers = []
         self.ledger = None
 
@@ -40,36 +41,33 @@ class Game(object):
 
         self.__catalog.load_data(data)
 
-
-
-
-
-
-    def start_new(self, level_key, program_key, l_input=None):
+    def start_new(self, level_key, program_key, list_input=None):
         self.current_level = self.__catalog.get_level(level_key)
 
         if self.current_level.is_movie:
             return
 
-        self._build_new_engine(program_key, l_input)
+        self.program = self.current_level.get_program(program_key)
 
-    def restart(self, l_input=None):
+        return self._build_new_engine(list_input)
+
+    def restart(self, list_input=None):
+        assert self.current_level, "Cannot restart, no previous level set!"
+
         if self.current_level.is_movie:
             return
 
-        program_key = self.engine.program_key
+        return self._build_new_engine(list_input)
 
-        self._build_new_engine(program_key, l_input)
-
-    def _build_new_engine(self, program_key, l_input):
-        self.engine = Engine(self.current_level, program_key, l_input)
-
+    def _build_new_engine(self, list_input=None):
         if self.ledger:
+            # Remember the previous one
             self.ledgers.append(self.ledger)
 
-        self.ledger = Ledger(self.current_level, self.engine.program)
-        self.ledger.capture_init_state(self.engine.input, self.engine.registers)
-        self.engine.ledger = self.ledger
+        self.ledger = Ledger(self.current_level, self.program, list_input)
+        self.engine = Engine(self.current_level, self.program, self.ledger)
+
+        return self.engine
 
 
 
@@ -113,3 +111,6 @@ class Game(object):
     def get_outbox(self):
         return self.engine.output
 
+    # sugar so you don't have to worry so much about strings
+    def get_level(self, level_key):
+        return self.levels[str(level_key)]

@@ -20,7 +20,7 @@ class Level(object):
         self.programs = dict()
         self.available_cmds = []
 
-        self.input = None
+        self.input_details = None
         self.goal = None
         self.registers = None
 
@@ -38,39 +38,32 @@ class Level(object):
         self.process_registers(lookup(data, 'registers'))
         self.process_programs(lookup(data, 'programs'))
 
-    def process_programs(self, programs_data):
+    def process_programs(self, programs_data) -> None:
         if not programs_data:
             return
 
         for key, program in programs_data.items():
-            self.programs[key] = \
-                Program(self.key, key, program, self.available_cmds)
+            self.programs[key] = Program(self.key, key, program, self.available_cmds)
 
-    def process_registers(self, register_data):
+    def process_registers(self, register_data) -> None:
         if not register_data:
-            return Registers(0, [])
+            self.registers = Registers(0, [])
+            return
 
-        values = lookup(register_data, 'values', [])
+        self.registers = \
+            Registers(lookup(register_data, 'count', 0), lookup(register_data, 'values', []))
 
-        new_vals = dict()
-
-        # string-ify all keys
-        for key in values:
-            new_vals[str(key)] = values[key]
-
-        self.registers = Registers(lookup(register_data, 'count', 0), new_vals)
-
-    def process_input(self, input_data):
+    def process_input(self, input_data) -> None:
         if not input_data:
             return
 
-        self.input = InputDetails(input_data)
+        self.input_details = InputDetails(input_data)
 
-    def process_goal(self, goal_data):
+    def process_goal(self, goal_data) -> None:
         if not goal_data:
             return
 
-        # "Expected" here is if there is ONE and ONLY ONE output for ANY GIVEN input
+        # "Expected" here is if there is ONE and ONLY ONE output for ANY GIVEN input_details
         # (e.g. Level 3 in the main game has this property)
         self.goal = Goal(
             lookup(goal_data, 'formula'), lookup(goal_data, 'size'),
@@ -86,5 +79,12 @@ class Level(object):
             sol = lookup(self.programs, 'optimal')
 
         return sol
+
+    def get_new_sample(self):
+        return self.input_details.get_new_sample()
+
+    def get_formula(self):
+        return self.goal.formula
+
 
 

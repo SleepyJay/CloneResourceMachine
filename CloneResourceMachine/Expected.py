@@ -6,27 +6,16 @@ from JAGpy.Structs import lookup
 
 class Expected(object):
 
-    def __init__(self, program, goal):
-        self.program = program
-        self.goal = goal
+    def __init__(self, formula, list_input):
+        self.input = list_input
+        self.formula = formula
+        self.output = None
 
-        self.size = 0
-        self.speed = 0
-        self.output = []
+        self.predict_output()
 
-        if program.size is None:
-            self.size = self.goal.size
-        else:
-            self.size = program.size
-
-        if program.speed is None:
-            self.speed = self.goal.speed
-        else:
-            self.speed = program.speed
-
-    def predict_output(self, formula, l_input):
-        fn = FORMULAS[formula]
-        self.output = fn(l_input)
+    def predict_output(self):
+        fn = FORMULAS[self.formula]
+        self.output = fn(self.input)
         return self.output
 
 
@@ -46,7 +35,7 @@ def fn_subtact_both(items):
     return result
 
 
-def fn_None():
+def fn_none():
     return None
 
 
