@@ -19,14 +19,15 @@ class Test_ConfirmTests(unittest.TestCase):
 
         # I know some specfics about levels...
 
-        level_1 = levels[1]
+        level_1 = game.get_level(1)
         self.assertTrue(level_1, "Level 1 exists")
         self.assertTrue(level_1.registers, 'Level 1 has registers')
+        self.assertEqual(level_1.registers.count, 0, 'Level 1 registers count 0')
 
-        level_3 = levels[3]
+        level_3 = game.get_level(3)
         self.assertTrue(level_3, "Level 3 exists")
 
-        level_5 = levels[5]
+        level_5 = game.get_level(5)
         self.assertTrue(level_5, "Level 5 exists")
         self.assertTrue(level_5.is_movie, "Level 5 is a movie")
 

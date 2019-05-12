@@ -1,6 +1,7 @@
 
 import unittest
-from CloneResourceMachine.Level import Level, Command
+from CloneResourceMachine.Level import Level
+from CloneResourceMachine.Program import Command, Program
 from collections import namedtuple
 
 TestItem = namedtuple("TestItem", ['input', 'expected'])
@@ -28,11 +29,10 @@ class Test_Regex(unittest.TestCase):
                      Command(ln, 'echo', 'this should show up', None, None)),
         ]
 
-        level = Level('test_process_commands', dict())
-
         for test in tests:
-            actual = level.process_str_command(ln, test.input)
-            # par = RE_cmd.match(test.input)
+            prog = Program('test_level', 'prog_key', None)
+            actual = prog.process_str_command(ln, test.input)
+            # par = RE_cmd.match(test.input_details)
             if actual:
                 print("'{}' ==> '{}'".format(test.input, actual))
                 

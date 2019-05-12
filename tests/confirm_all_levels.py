@@ -36,13 +36,13 @@ class Test_ConfirmTests(unittest.TestCase):
                 # print("{} => {}".format(game.engine.initial_input, game.engine.output))
 
                 actual_output = game.get_outbox()
-                expect_output = ledger.goal.expected.output
+                expect_output = ledger.expected.output
                 self.assertEqual(actual_output, expect_output,
                                  f"Output for ({level_key}-{goal_type}): OK")
 
                 if goal_type == 'fast':
                     actual_speed = ledger.get_speed()
-                    goal_speed = ledger.goal.speed
+                    goal_speed = ledger.level.goal.speed
                     expect_speed = ledger.program.speed or goal_speed
 
                     self.assertLessEqual(actual_speed, expect_speed,
@@ -52,8 +52,8 @@ class Test_ConfirmTests(unittest.TestCase):
                         print("Warning: speed too slow for Goal: {} vs {}".format(actual_speed, goal_speed))
 
                 if goal_type == 'small':
-                    actual_size = ledger.get_size()
-                    goal_size = ledger.goal.size
+                    actual_size = ledger.program.get_size()
+                    goal_size = ledger.level.goal.size
                     expect_size = ledger.program.size or goal_size
 
                     self.assertLessEqual(actual_size, expect_size,
