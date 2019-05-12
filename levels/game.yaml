@@ -256,29 +256,15 @@ levels:
             size: 5
             speed: 25
         programs:
-            small:
-                speed: 28
+            optimal:
+                speed: 25
                 size: 5
                 commands:
-                    - inbox         # 1
-                    - jumpzero 4
-                    - jump 1
-                    - outbox        # 4
-                    - jump 1
-            fast:
-                size: 9
-                speed: 24
-                commands:
-                    - inbox         # 1
-                    - jumpzero 9
+                    - jump 3
+                    - outbox
                     - inbox
-                    - jumpzero 9
-                    - inbox
-                    - jumpzero 9
-                    - inbox
-                    - jumpzero 9
-                    - outbox        # 8
-                    - jump 1
+                    - jumpzero 2
+                    - jump 3
     10:
         name: Octoplier Suite
         available:
@@ -749,69 +735,70 @@ levels:
                     - add T
                     - copyto T
                     - jump 22
-    21:
-        name: Zero Terminated Sum
-        available:
-            - inbox
-            - outbox
-            - copyfrom
-            - copyto
-            - add
-            - sub
-            - bump+
-            - bump-
-            - jump
-            - jumpzero
-            - jumpneg
-        input:
-            alphabet: P N Z
-            count: 16
-            sample:
-                - 7
-                - 2
-                - 0
-                - 8
-                - -9
-                - 8
-                - 0
-                - 0
-                - 0
-                - 8
-                - -3
-                - 1
-                - 4
-                - -5
-                - 2
-                - 0
-        goal:
-            formula: for $a => sum(each $a until 0)
-            size: 10
-            speed: 72
-        registers:
-            count: 6
-            values:
-                5: 0
-        programs:
-#            small:
-#                speed:
-#                commands:
 
-            fast:
-                size: 11
-                avg_speed: 68
-                speed: 80
-                commands:
-                    - jump 4
-                    - copyfrom 0
-                    - outbox
-                    - inbox
-                    - jumpzero 3
-                    - copyto 0
-                    - inbox
-                    - jumpzero 2
-                    - add  0
-                    - copyto 0
-                    - jump 7
+#    21:
+#        name: Zero Terminated Sum
+#        available_cmds:
+#            - inbox
+#            - outbox
+#            - copyfrom
+#            - copyto
+#            - add
+#            - sub
+#            - bump+
+#            - bump-
+#            - jump
+#            - jumpzero
+#            - jumpneg
+#        input_details:
+#            alphabet: P N Z
+#            count: 16
+#            sample:
+#                - 7
+#                - 2
+#                - 0
+#                - 8
+#                - -9
+#                - 8
+#                - 0
+#                - 0
+#                - 0
+#                - 8
+#                - -3
+#                - 1
+#                - 4
+#                - -5
+#                - 2
+#                - 0
+#        goal:
+#            formula: for $a => sum(each $a until 0)
+#            size: 10
+#            speed: 72
+#        registers:
+#            count: 6
+#            values:
+#                5: 0
+#        programs:
+##            small:
+##                speed:
+##                commands:
+#
+#            fast:
+#                size: 11
+#                avg_speed: 68
+#                speed: 80
+#                commands:
+#                    - jump 4
+#                    - copyfrom 0
+#                    - outbox
+#                    - inbox
+#                    - jumpzero 3
+#                    - copyto 0
+#                    - inbox
+#                    - jumpzero 2
+#                    - add  0
+#                    - copyto 0
+#                    - jump 7
 
 
 
