@@ -4,6 +4,7 @@ from collections import namedtuple
 from CloneResourceMachine.Expected import Expected
 
 Step = namedtuple('step', "line command inbox holding registers outbox comment")
+Result = namedtuple('result', 'passed, speed, size, fast, small, fast_enough')
 
 
 class Ledger(object):
@@ -20,6 +21,7 @@ class Ledger(object):
         self.input = None
         self.expected = None
         self.iter = 0
+        self.outbox = None
 
         self._build_input(list_input)
 
@@ -98,47 +100,46 @@ class Ledger(object):
 
         return ledger_str
 
-    def get_goal_table(self, outbox=None):
-        goal = self.level.goal
-        exp_output = self.expected.output
-        actual_speed = self.get_speed()
-        actual_size = self.program.get_size()
-        outbox = outbox or self.outbox
+    def get_goal_table(self):
 
-        if exp_output == outbox:
+        result = self.get_result()
+        if result.passed:
             passing = 'PASS'
         else:
             passing = 'FAIL'
 
         speed_res = ''
-        if actual_speed <= goal.speed:
+        if result.fast:
             speed_res = 'FAST'
-        elif actual_speed != goal.speed:
-            speed_res = '(slow?)'
+        elif result.fast_enough:
+            speed_res = '(expected)'
 
         size_res = ''
-        if actual_size <= goal.size:
+        if result.small:
             size_res = 'SMALL'
-        elif actual_size != goal.size:
-            size_res = '(long?)'
+
+        goal = self.level.goal
+        actual_speed = self.get_speed()
+        actual_size = self.program.get_size()
+        outbox = self.outbox
 
         goal_table = PrettyTable([
-            'type', 'goal', 'expected', 'actual', 'values', 'result'
+            'type', 'goal', 'expected', 'actual', 'result'
         ])
 
-        for n in ['type', 'values', 'result']:
+        for n in ['type', 'result']:
             goal_table.align[n] = 'l'
 
+        # I think I like left align for these now?
         for n in ['goal', 'expected', 'actual']:
-            goal_table.align[n] = 'r'
+            goal_table.align[n] = 'l'
 
         expect_size = self.program.size or goal.size
         expect_speed = self.program.speed or goal.speed
-        goal_table.add_row(['input', '', '', '', self.initial_state.inbox, ''])
-        goal_table.add_row([goal.formula, '', '', '', str(outbox), passing])
-        goal_table.add_row(['expected', '', '', '', self.expected.output, ''])
-        goal_table.add_row(['size', goal.size, expect_size, actual_size, '', size_res ])
-        goal_table.add_row(['speed', goal.speed, expect_speed, actual_speed, '', speed_res])
+        goal_table.add_row(['input', '', '', self.initial_state.inbox, ''])
+        goal_table.add_row([goal.formula, '', self.expected.output, str(outbox), passing])
+        goal_table.add_row(['size', goal.size, expect_size, actual_size, size_res ])
+        goal_table.add_row(['speed', goal.speed, expect_speed, actual_speed, speed_res])
 
         return str(goal_table)
 
@@ -153,8 +154,35 @@ class Ledger(object):
 
     def capture_end_state(self, l_input, outbox):
         # line command inbox holding registers outbox comment
-        self.outbox = outbox
-        self.ending_state = Step('', 'end', str(l_input), '', '', outbox, '')
+        self.outbox = outbox.copy()
+        self.ending_state = Step('', 'end', str(l_input), '', '', self.outbox, '')
+
+    def get_result(self):
+        actual_speed = self.get_speed()
+        actual_size = self.program.get_size()
+        goal = self.level.goal
+        expect_speed = self.program.speed or goal.speed
+
+        fast = False
+        small = False
+        passed = False
+        fast_enough = False
+        speed = actual_speed
+        size = actual_size
+
+        if self.expected.output == self.outbox:
+            passed = True
+
+        if actual_speed <= goal.speed:
+            fast = True
+            fast_enough = True
+        elif actual_speed <= expect_speed:
+            fast_enough = True
+
+        if actual_size <= goal.size:
+            small = True
+
+        return Result(passed, speed, size, fast, small, fast_enough)
 
     def __repr__(self):
         return "=== {} - {} : {}\n".format(
