@@ -46,7 +46,6 @@ class Program(object):
             pre_commands.append(cmd_item)
 
         ln = 0
-        labels = dict()
 
         for str_cmd in pre_commands:
             command = self.process_str_command(ln, str_cmd)
@@ -57,11 +56,8 @@ class Program(object):
             assert (command.name in self.available_cmds), \
                 f"Command {command.name} not available to program {self.level_key}-{self.key}!"
 
-            # TODO: incorporate all of the commands as labels (using numbers if none provided
-            # TODO: provide an order (somehwere)
-            # TODO: throw and error if label conflicts
             if command.label is not None:
-                labels[command.label] = ln
+                self.labels[command.label] = ln
 
             self.commands.append(command)
 

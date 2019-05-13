@@ -136,21 +136,22 @@ class Engine(object):
 
     def do_jump(self, val):
         # added labels in this program; not part of original game
-        if val in self.labels:
-            self.next = self.labels[val]
+        if str(val) in self.labels:
+            self.next = self.labels[str(val)]
         else:
             try:
                 val = int(val)
-            except:
+
+                if val >= len(self.program.commands):
+                    self.error_bad_jump(val)
+                    return
+
+                else:
+                    self.next = val - 1
+
+            except ValueError:
                 self.error_bad_jump(val)
                 return
-
-        if val >= len(self.program.commands):
-            self.error_bad_jump(val)
-            return
-
-        else:
-            self.next = val - 1
 
     def finish(self):
         self.ledger.capture_end_state(self.input, self.output)

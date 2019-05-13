@@ -70,7 +70,7 @@ class Ledger(object):
         for step in self.steps:
             command = step.command
 
-            line = command.line
+            line = command.line + 1
             if command.label:
                 line = "{} ({})".format(line, command.label)
 
@@ -81,7 +81,7 @@ class Ledger(object):
             self.iter += 1
 
             state_table.add_row([
-                self.iter, line + 1, cmd, step.inbox, step.holding,
+                self.iter, line, cmd, step.inbox, step.holding,
                 step.registers, step.outbox, command.comment or ''
             ])
 

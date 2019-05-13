@@ -20,7 +20,7 @@ levels:
         programs:
             optimal:
                 commands:
-                    - inbox
+                    - x:inbox
                     - outbox
                     - inbox
                     - outbox
@@ -260,9 +260,9 @@ levels:
                 speed: 25
                 size: 5
                 commands:
-                    - jump 3
+                    - jump in
                     - outbox
-                    - inbox
+                    - 'in: inbox'
                     - jumpzero 2
                     - jump 3
     10:
