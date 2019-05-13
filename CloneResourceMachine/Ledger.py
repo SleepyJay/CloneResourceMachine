@@ -105,8 +105,6 @@ class Ledger(object):
         actual_size = self.program.get_size()
         outbox = outbox or self.outbox
 
-        print("exp({}): {}".format(type(exp_output), exp_output))
-        print("act({}): {}".format(type(outbox), outbox))
         if exp_output == outbox:
             passing = 'PASS'
         else:
@@ -125,10 +123,10 @@ class Ledger(object):
             size_res = '(long?)'
 
         goal_table = PrettyTable([
-            'type', 'goal', 'expected', 'actual', 'in/out boxes', 'result'
+            'type', 'goal', 'expected', 'actual', 'values', 'result'
         ])
 
-        for n in ['type', 'in/out boxes', 'result']:
+        for n in ['type', 'values', 'result']:
             goal_table.align[n] = 'l'
 
         for n in ['goal', 'expected', 'actual']:
@@ -136,8 +134,9 @@ class Ledger(object):
 
         expect_size = self.program.size or goal.size
         expect_speed = self.program.speed or goal.speed
-        goal_table.add_row(['input_details', '', '', '', self.initial_state.inbox, ''])
+        goal_table.add_row(['input', '', '', '', self.initial_state.inbox, ''])
         goal_table.add_row([goal.formula, '', '', '', str(outbox), passing])
+        goal_table.add_row(['expected', '', '', '', self.expected.output, ''])
         goal_table.add_row(['size', goal.size, expect_size, actual_size, '', size_res ])
         goal_table.add_row(['speed', goal.speed, expect_speed, actual_speed, '', speed_res])
 
