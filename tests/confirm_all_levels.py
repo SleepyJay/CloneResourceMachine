@@ -11,7 +11,7 @@ class Test_ConfirmTests(unittest.TestCase):
         game.load_multi_level_file('../levels/game.yaml')
 
         for key, values in game.levels.items():
-            if int(key) > 20:
+            if int(key) > 21:
                 break
 
             for goal_type in ('fast', 'small'):

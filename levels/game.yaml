@@ -181,6 +181,15 @@ levels:
                 - 0
                 - 2
                 - 0
+            discrete:
+                - [1,2,3,4,5,6,7,0]
+                - [1,2,3,4,5,6,0,0]
+                - [1,2,3,4,5,0,0,0]
+                - [1,2,3,4,0,0,0,0]
+                - [1,2,3,0,0,0,0,0]
+                - [1,2,0,0,0,0,0,0]
+                - [1,0,0,0,0,0,0,0]
+                - [0,0,0,0,0,0,0,0]
         goal:
             formula: for ($a) => if not 0
             size: 4
@@ -735,70 +744,157 @@ levels:
                     - add T
                     - copyto T
                     - jump 22
+    21:
+        name: Zero Terminated Sum
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - bump+
+            - bump-
+            - jump
+            - jumpzero
+            - jumpneg
+        input:
+            alphabet: P N Z
+            count: 16
+            sample:
+                - 7
+                - 2
+                - 0
+                - 8
+                - -9
+                - 8
+                - 0
+                - 0
+                - 0
+                - 8
+                - -3
+                - 1
+                - 4
+                - -5
+                - 2
+                - 0
+        goal:
+            formula: for $a => sum(each $a until 0)
+            size: 10
+            speed: 72
+        registers:
+            count: 6
+            values:
+                5: 0
+        programs:
+            optimal:
+                size: 10
+                avg_speed: 68
+                speed: 80
+                commands:
+                    - jump 4
+                    - copyfrom 0
+                    - outbox
+                    - inbox
+                    - jumpzero 3
+                    - copyto 0
+                    - inbox
+                    - jumpzero 2
+                    - add  0
+                    - jump 6
+    22:
+        name: Fibonacci Visitor
+        available:
+            - inbox
+            - outbox
+            - copyfrom
+            - copyto
+            - add
+            - sub
+            - bump+
+            - bump-
+            - jump
+            - jumpzero
+            - jumpneg
+        input:
+            alphabet: M
+            count: 2
+            sample:
+                - 20
+                - 8
+        goal:
+            formula: for $a => iter fib($a) upto $a
+            size: 19
+            speed: 156
+        registers:
+            count: 10
+            values:
+                'max': ''
+                'one': ''
+                'cur': ''
+                'temp': ''
+                'prev': 0
+        programs:
+            # neither of these accounts for values [0, 1] ...
+            fast:
+                avg_speed: 153
+                commands:
+                    - bump+ prev
+                    - copyto one
+                    - 3:inbox
+                    - copyto max
+                    - copyfrom one
+                    - copyto prev
+                    - copyto cur
+                    - copyto temp
+                    - outbox
+                    - copyfrom cur
+                    - outbox
+                    - 12:copyfrom prev
+                    - add cur
+                    - copyto cur
+                    - copyfrom temp
+                    - copyto prev
+                    - copyfrom cur
+                    - copyto temp
+                    - copyfrom max
+                    - sub cur
+                    - jumpneg 3
+                    - copyfrom cur
+                    - outbox
+                    - jump 12
+            small:
+                commands:
+                    - in:inbox
+                    - copyto max
+                    - bump+ prev
+                    - copyto one
+                    - copyfrom one
+                    - copyto prev
+                    - copyto cur
+                    - copyto temp
+                    - outbox
+                    - copyfrom cur
+                    - outbox
+                    - loop:copyfrom prev
+                    - add cur
+                    - copyto cur
+                    - copyfrom temp
+                    - copyto prev
+                    - copyfrom cur
+                    - copyto temp
+                    - copyfrom max
+                    - sub cur
+                    - jumpneg in
+                    - copyfrom cur
+                    - outbox
+                    - jump loop
 
-#    21:
-#        name: Zero Terminated Sum
-#        available_cmds:
-#            - inbox
-#            - outbox
-#            - copyfrom
-#            - copyto
-#            - add
-#            - sub
-#            - bump+
-#            - bump-
-#            - jump
-#            - jumpzero
-#            - jumpneg
-#        input_details:
-#            alphabet: P N Z
-#            count: 16
-#            sample:
-#                - 7
-#                - 2
-#                - 0
-#                - 8
-#                - -9
-#                - 8
-#                - 0
-#                - 0
-#                - 0
-#                - 8
-#                - -3
-#                - 1
-#                - 4
-#                - -5
-#                - 2
-#                - 0
-#        goal:
-#            formula: for $a => sum(each $a until 0)
-#            size: 10
-#            speed: 72
-#        registers:
-#            count: 6
-#            values:
-#                5: 0
-#        programs:
-##            small:
-##                speed:
-##                commands:
-#
-#            fast:
-#                size: 11
-#                avg_speed: 68
-#                speed: 80
-#                commands:
-#                    - jump 4
-#                    - copyfrom 0
-#                    - outbox
-#                    - inbox
-#                    - jumpzero 3
-#                    - copyto 0
-#                    - inbox
-#                    - jumpzero 2
-#                    - add  0
-#                    - copyto 0
-#                    - jump 7
+
+
+
+
+
 
 
 

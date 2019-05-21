@@ -1,5 +1,6 @@
 
 from functools import partial
+from math import sqrt, pow
 from JAGpy.Numbers import has_sign, is_int
 from JAGpy.Structs import lookup
 
@@ -157,6 +158,51 @@ def fn_sum_pairs(items):
     return result
 
 
+# We don't allow 0...
+# avoid recursion
+# and didn't use formula, because we don't know which nth item we are (see below)
+def fn_fib_upto(items):
+    result = []
+
+    for a in items:
+        cur = 1
+        prev = cur
+        temp = cur
+        flist = [cur]
+
+        while cur <= a:
+            flist.append(cur)
+            temp = cur
+            cur += prev
+            prev = temp
+
+        # result.extend(reversed(flist))
+        result.extend(flist)
+
+    return result
+
+
+# This is fibonacci by formula, sure, but is it more simple than above? Meh.
+def fn_fib_formula_upto(items):
+    golden_mean_pos = (1 + sqrt(5)) / 2
+    golden_mean_neg = (1 - sqrt(5)) / 2
+
+    result = []
+
+    for a in items:
+        flist = [1]
+        cur = 1
+        n = 2
+
+        while cur <= a:
+            flist.append(cur)
+            n += 1
+            cur = int((pow(golden_mean_pos, n) - pow(golden_mean_neg, n)) / sqrt(5))
+
+        result.extend(reversed(flist))
+
+    return result
+
 FORMULAS = {
     '() => “BUG”': partial(fn_just_respond, ['B','U','G']),
     'for ($a, $b) => ($b - $a, $a - $b)': fn_subtact_both,
@@ -175,4 +221,5 @@ FORMULAS = {
     'for $a => each ($a to 0)': fn_count_to_zero,
     'for $a => sum(each $a until 0)': fn_sum_until_zero,
     'for ($a, $b) => sum($a, $b)': fn_sum_pairs,
+    'for $a => iter fib($a) upto $a': fn_fib_upto,
 }

@@ -4,7 +4,7 @@ from CloneResourceMachine.Game import Game
 
 # This is sort of dumb...at some point I'm going to add a level count and this is going to need
 # to be increased, but I don't know of another way ATM to get the count...
-LEVEL_COUNT = 20
+LEVEL_COUNT = 22
 
 class Test_ConfirmTests(unittest.TestCase):
 
