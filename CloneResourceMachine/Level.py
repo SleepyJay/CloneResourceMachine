@@ -47,11 +47,11 @@ class Level(object):
 
     def process_registers(self, register_data) -> None:
         if not register_data:
-            self.registers = Registers(0, [])
+            self.registers = Registers(0, {})
             return
 
         self.registers = \
-            Registers(lookup(register_data, 'count', 0), lookup(register_data, 'values', []))
+            Registers(lookup(register_data, 'count', 0), lookup(register_data, 'values', {}))
 
     def process_input(self, input_data) -> None:
         if not input_data:

@@ -1,5 +1,5 @@
 
-from JAGpy.Structs import lookup
+from JAGpy.Numbers import intify
 
 # Engine runs one level at a time
 # Can run same or different programs over and over
@@ -32,11 +32,12 @@ class Engine(object):
 
         self.registers = dict()
 
+        for key, val in registers_obj.values.items():
+            self.registers[str(key)] = intify(val)
+
         for r in range(0, registers_obj.count):
             str_r = str(r)
-            if str_r in registers_obj.values:
-                self.registers[str_r] = registers_obj.values[str_r]
-            else:
+            if str_r not in self.registers:
                 self.registers[str_r] = ''
 
     def step(self):
