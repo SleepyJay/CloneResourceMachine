@@ -1,62 +1,25 @@
 
+import sys
 from CloneResourceMachine.Game import Game
 
-test_data = {
-    'available': ['inbox', 'outbox', 'jump'],
-    'goal': {
-        'formula': 'for $a => $a',
-        'size': 6,
-        'speed': 6,
-    },
-    'input': {
-        'alphabet': 'alpha-numeric',
-        'count': 3,
-        'sample': [3, 'E', 0]
-    },
-    'registers': {
-        'count' : 2
-    },
-    'name': 'TESTING',
-    'programs': {
-        'a': {
-            'commands': [
-                'foo: inbox',
-                'outbox',
-                'jump foo'
-            ]
-        },
-        'b': {
-            'commands': [
-                '1: inbox',
-                'jumpzero 4',
-                'jump 1',
-                '4: outbox',
-                'jump 1'
-            ]
-        }
-    }
-}
+level_key = 1
+progm_key = 'fast'
+
+# get level_key, prog_key from ARGV
+if len(sys.argv) > 2:
+    level_key = sys.argv[1]
+    progm_key = sys.argv[2]
 
 game = Game()
 game.load_multi_level_file('levels/game.yaml')
+game.start_new(level_key, progm_key)
+ledger = game.run()
+avg = game.run_discrete_input()
 
-# game.load_level_file('levels/game_16.yaml')
-# game.load_level_data('test_data', test_data)
-
-level_1 = game.levels['1']
-
-#game.start_new(1, 'fast')
-# # game.start_new(20, 'small')
-# ledger = game.run()
-
-# for i in range(0,1):
-#     game.start_new(7, 'fast', ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'])
-#     ledger = game.run()
-#     speed = ledger.get_speed()
-#     print(f"{ledger.initial_state.inbox} ==> {speed}")
-#     if game.ledger.error_state:
-#         print(game.ledger.error_state)
+print(ledger)
+print('Results of basic run:')
+print(ledger.get_goal_table())
+print('Average of descrete runs:')
+print(avg)
 
 
-# print(ledger)
-# print(ledger.get_goal_table())
