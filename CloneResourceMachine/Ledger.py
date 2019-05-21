@@ -4,7 +4,7 @@ from collections import namedtuple
 from CloneResourceMachine.Expected import Expected
 
 Step = namedtuple('step', "line command inbox holding registers outbox comment")
-Result = namedtuple('result', 'passed, speed, size, fast, small, fast_enough')
+Result = namedtuple('result', 'passed, speed, size, fast, small')
 
 
 class Ledger(object):
@@ -101,6 +101,11 @@ class Ledger(object):
         return ledger_str
 
     def get_goal_table(self):
+        goal = self.level.goal
+        actual_speed = self.get_speed()
+        actual_size = self.program.get_size()
+        outbox = self.outbox
+        expect_speed = self.program.speed or goal.speed
 
         result = self.get_result()
         if result.passed:
@@ -111,35 +116,30 @@ class Ledger(object):
         speed_res = ''
         if result.fast:
             speed_res = 'FAST'
-        elif result.fast_enough:
+        #elif
+        elif actual_speed <= expect_speed:
             speed_res = '(expected)'
 
         size_res = ''
         if result.small:
             size_res = 'SMALL'
 
-        goal = self.level.goal
-        actual_speed = self.get_speed()
-        actual_size = self.program.get_size()
-        outbox = self.outbox
-
         goal_table = PrettyTable([
-            'type', 'goal', 'expected', 'actual', 'result'
+            'type', 'formula', 'size', 'speed', 'values'
         ])
 
-        for n in ['type', 'result']:
+        for n in ['type', 'formula', 'values']:
             goal_table.align[n] = 'l'
 
-        # I think I like left align for these now?
-        for n in ['goal', 'expected', 'actual']:
-            goal_table.align[n] = 'l'
+        for n in ['size', 'speed']:
+            goal_table.align[n] = 'r'
 
         expect_size = self.program.size or goal.size
         expect_speed = self.program.speed or goal.speed
-        goal_table.add_row(['input', '', '', self.initial_state.inbox, ''])
-        goal_table.add_row([goal.formula, '', self.expected.output, str(outbox), passing])
-        goal_table.add_row(['size', goal.size, expect_size, actual_size, size_res ])
-        goal_table.add_row(['speed', goal.speed, expect_speed, actual_speed, speed_res])
+        goal_table.add_row(['input', goal.formula, goal.size, goal.speed, self.initial_state.inbox])
+        goal_table.add_row(['expected', '', expect_size, expect_speed, self.expected.output])
+        goal_table.add_row(['actual', '', actual_size, actual_speed, str(outbox)])
+        goal_table.add_row(['result', '', size_res, speed_res, passing])
 
         return str(goal_table)
 
@@ -161,12 +161,10 @@ class Ledger(object):
         actual_speed = self.get_speed()
         actual_size = self.program.get_size()
         goal = self.level.goal
-        expect_speed = self.program.speed or goal.speed
 
         fast = False
         small = False
         passed = False
-        fast_enough = False
         speed = actual_speed
         size = actual_size
 
@@ -175,14 +173,11 @@ class Ledger(object):
 
         if actual_speed <= goal.speed:
             fast = True
-            fast_enough = True
-        elif actual_speed <= expect_speed:
-            fast_enough = True
 
         if actual_size <= goal.size:
             small = True
 
-        return Result(passed, speed, size, fast, small, fast_enough)
+        return Result(passed, speed, size, fast, small)
 
     def __repr__(self):
         return "=== {} - {} : {}\n".format(

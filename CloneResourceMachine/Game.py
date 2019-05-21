@@ -1,7 +1,10 @@
 
+from collections import namedtuple
 from CloneResourceMachine.Engine import Engine
 from CloneResourceMachine.Catalog import Catalog
 from CloneResourceMachine.Ledger import Ledger
+
+AvgResult = namedtuple('avg_result', 'all_passed, best_speed, worst_speed, avg_speed, passed, failed')
 
 MAX_ITERS = 1000
 
@@ -69,8 +72,6 @@ class Game(object):
 
         return self.engine
 
-
-
     def run(self):
         if self.current_level.is_movie:
             self.play_movie(self.current_level)
@@ -94,13 +95,46 @@ class Game(object):
         else:
             return self.engine.step()
 
-    def play_movie(self, level):
-        print("Level Movie: '{} - {}'".format(level.key, level.name))
-    def confirm_result(self, l_output=None):
-        if self.current_level.is_movie:
+    def run_discrete_input(self):
+        discrete_list = self.current_level.get_discrete_input()
+
+        if not discrete_list:
             return
 
-        return self.engine.confirm_result(l_output)
+        all_passed = True
+        passed = 0
+        failed = 0
+        total_runs = 0
+        best_speed = None
+        worst_speed = None
+        total_speed = 0
+
+        for discrete_input in discrete_list:
+            self.restart(discrete_input)
+            ledger = self.run()
+            res = ledger.get_result()
+            total_runs += 1
+
+            if res.passed:
+                if best_speed is None or res.speed < best_speed:
+                    best_speed = res.speed
+
+                if worst_speed is None or res.speed > worst_speed:
+                    worst_speed = res.speed
+
+                total_speed += res.speed
+
+                passed += 1
+            else:
+                all_passed = False
+                failed += 1
+
+        avg_speed = int(total_speed/total_runs)
+        return AvgResult(all_passed, best_speed, worst_speed, avg_speed, passed, failed)
+
+    @staticmethod
+    def play_movie(level):
+        print("Level Movie: '{} - {}'".format(level.key, level.name))
 
     def get_ledger(self):
         return self.engine.get_ledger()
@@ -114,3 +148,6 @@ class Game(object):
     # sugar so you don't have to worry so much about strings
     def get_level(self, level_key):
         return self.levels[str(level_key)]
+
+
+

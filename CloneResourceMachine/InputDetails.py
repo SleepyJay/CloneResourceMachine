@@ -8,8 +8,9 @@ from JAGpy.Structs import lookup
 ALPHABET = list(string.ascii_uppercase)
 POSITIVE = list(range(1, 10))
 NEGATIVE = list(range(-9, 0))
+MANY = list(range(1,21))
 
-THINGS = dict(P=POSITIVE, N=NEGATIVE, Z=[0], A=ALPHABET)
+THINGS = dict(P=POSITIVE, N=NEGATIVE, Z=[0], A=ALPHABET, M=MANY)
 
 
 class InputDetails(object):
@@ -18,7 +19,7 @@ class InputDetails(object):
         self.alphabet = lookup(data, 'alphabet', '')
         self.count = lookup(data, 'count', 0)
         self.sample = lookup(data, 'sample', [])
-        self.descrete = []
+        self.discrete = []
 
         self.process_discrete(lookup(data, 'discrete'))
 
@@ -34,12 +35,16 @@ class InputDetails(object):
 
         mix = []
         for a in alphas:
-            if len(a) > 1:
+            if len(a) == 2:
                 (item, rep) = list(a)
                 rep = int(rep)
                 for i in range(0, rep):
                     new_sample.extend(THINGS[item])
                 count -= rep
+            # elif len(a) == 3:
+            #     (item, op, num) = list(a)
+            #     if item == 'M' and op == '<':
+            #         new_sample.extend(range(1,))
             else:
                 mix += THINGS[a]
 
@@ -56,9 +61,7 @@ class InputDetails(object):
         if discrete is None:
             return
 
-        for dis in discrete:
-            dis_list = dis.split(' ')
-            self.descrete.append(dis_list)
+        self.discrete.extend(discrete)
 
     def __repr__(self):
         return str(dict(alphabet=self.alphabet, count=self.count, sample=self.sample))

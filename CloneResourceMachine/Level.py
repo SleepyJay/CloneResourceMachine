@@ -86,5 +86,7 @@ class Level(object):
     def get_formula(self):
         return self.goal.formula
 
+    def get_discrete_input(self):
+        return self.input_details.discrete
 
 
