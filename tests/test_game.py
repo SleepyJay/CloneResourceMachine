@@ -9,6 +9,7 @@ LEVEL_COUNT = 22
 class Test_ConfirmTests(unittest.TestCase):
 
     def test_levels(self):
+        print("\n>> Testing levels...")
         game = Game()
         game.load_multi_level_file('../levels/game.yaml')
 
@@ -30,6 +31,16 @@ class Test_ConfirmTests(unittest.TestCase):
         level_5 = game.get_level(5)
         self.assertTrue(level_5, "Level 5 exists")
         self.assertTrue(level_5.is_movie, "Level 5 is a movie")
+
+    def test_empty_program(self):
+        print("\n>> Testing level with empty program...")
+        game = Game()
+        game.load_multi_level_file('../levels/game.yaml')
+
+        engine = game.start_new(1, None)
+        self.assertTrue(engine)
+
+
 
 
 

@@ -13,14 +13,16 @@ class Engine(object):
         self.program = program
         self.ledger = ledger
         self.input = ledger.input.copy()
-        self.labels = program.labels
 
-        self.commands = program.commands
         self.cur_command = None
         self.cur_item = None
         self.next = 0
         self.output = []
         self.registers = None
+
+        if program:
+            self.labels = program.labels
+            self.commands = program.commands
 
         self.build_registers(level.registers)
 

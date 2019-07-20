@@ -50,7 +50,8 @@ class Game(object):
         if self.current_level.is_movie:
             return
 
-        self.program = self.current_level.get_program(program_key)
+        if program_key is not None:
+            self.program = self.current_level.get_program(program_key)
 
         return self._build_new_engine(list_input)
 
@@ -146,8 +147,11 @@ class Game(object):
         return self.engine.output
 
     # sugar so you don't have to worry so much about strings
-    def get_level(self, level_key):
-        return self.levels[str(level_key)]
+    def get_level(self, level_key=None):
+        if level_key is None:
+            return self.current_level
+        else:
+            return self.levels[str(level_key)]
 
 
 
