@@ -10,8 +10,7 @@ if len(sys.argv) > 2:
     level_key = sys.argv[1]
     progm_key = sys.argv[2]
 
-game = Game()
-game.load_multi_level_file('levels/game.yaml')
+game = Game('levels/game.yaml')
 game.start_new(level_key, progm_key)
 ledger = game.run()
 avg = game.run_discrete_input()

@@ -9,9 +9,9 @@ AvgResult = namedtuple('avg_result', 'all_passed, best_speed, worst_speed, avg_s
 MAX_ITERS = 1000
 
 
-class Game(object):
+class Game():
 
-    def __init__(self):
+    def __init__(self, level_file=None):
         # This object is really only to abstract the YAML parsing into Levels,
         # no need to expose it anywhere.
         self.__catalog = None
@@ -22,21 +22,18 @@ class Game(object):
         self.ledgers = []
         self.ledger = None
 
+        if level_file:
+            self.load_level_file(level_file)
+
     @property
     def levels(self):
         return self.__catalog.levels
 
-    def load_single_level_file(self, filename):
+    def load_level_file(self, filename):
         if not self.__catalog:
             self.__catalog = Catalog()
 
-        self.__catalog.load_single_file(filename)
-
-    def load_multi_level_file(self, filename):
-        if not self.__catalog:
-            self.__catalog = Catalog()
-
-        self.__catalog.load_multi_file(filename)
+        self.__catalog.load_file(filename)
 
     def load_level_data(self, data):
         if not self.__catalog:

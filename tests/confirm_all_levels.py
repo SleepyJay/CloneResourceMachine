@@ -7,8 +7,7 @@ from CloneResourceMachine.Game import Game
 class Test_ConfirmTests(unittest.TestCase):
 
     def test_confirm_levels(self):
-        game = Game()
-        game.load_multi_level_file('../levels/game.yaml')
+        game = Game('../levels/game.yaml')
 
         for key, values in game.levels.items():
             if int(key) > 21:

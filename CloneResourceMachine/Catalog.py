@@ -8,13 +8,9 @@ class Catalog (object):
     def __init__(self):
         self.levels = dict()
     
-    def load_multi_file(self, filename):
+    def load_file(self, filename):
         data = self.read_yaml(filename)
         self.load_data(data['levels'])
-
-    def load_single_file(self, filename):
-        data = self.read_yaml(filename)
-        self.load_data(data)
 
     def load_data(self, data):
         for key, values in data.items():

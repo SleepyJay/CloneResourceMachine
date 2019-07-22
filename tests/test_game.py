@@ -5,13 +5,13 @@ from CloneResourceMachine.Game import Game
 # This is sort of dumb...at some point I'm going to add a level count and this is going to need
 # to be increased, but I don't know of another way ATM to get the count...
 LEVEL_COUNT = 22
+LEVEL_PATH = '../levels/game.yaml'
 
 class Test_ConfirmTests(unittest.TestCase):
 
     def test_levels(self):
         print("\n>> Testing levels...")
-        game = Game()
-        game.load_multi_level_file('../levels/game.yaml')
+        game = Game(LEVEL_PATH)
 
         levels = game.levels
 
@@ -34,8 +34,7 @@ class Test_ConfirmTests(unittest.TestCase):
 
     def test_empty_program(self):
         print("\n>> Testing level with empty program...")
-        game = Game()
-        game.load_multi_level_file('../levels/game.yaml')
+        game = Game(LEVEL_PATH)
 
         engine = game.start_new(1, None)
         self.assertTrue(engine)
