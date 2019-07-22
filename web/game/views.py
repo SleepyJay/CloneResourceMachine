@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
 import os
+import json
 from CloneResourceMachine.Game import Game
 
 
@@ -14,11 +15,14 @@ def home(request):
 
 def load_level(request, level):
     level_path = os.path.join(settings.CRM_PATH, 'levels/game.yaml')
-    game = Game()
-    game.load_multi_level_file(level_path)
+    game = Game(level_path)
     game.start_new(level, None)
 
-    print(request)
+    data = game.to_data()
 
-    return HttpResponse(f'Level {level} Loaded? "{game.current_level.name}" ({settings.CRM_PATH})')
+    return HttpResponse(json.dumps(data))
+
+
+def gen_input(request, alphabet, count):
+    pass
 

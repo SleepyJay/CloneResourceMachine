@@ -1,6 +1,5 @@
 
 from random import shuffle, choice
-from collections import namedtuple
 import string
 from JAGpy.Numbers import intify
 from JAGpy.Structs import lookup

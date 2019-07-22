@@ -39,6 +39,21 @@ class Test_ConfirmTests(unittest.TestCase):
         engine = game.start_new(1, None)
         self.assertTrue(engine)
 
+    def test_level_to_data(self):
+        game = Game(LEVEL_PATH)
+
+        game.start_new(1, None)
+        actual_1 = game.to_data()
+        actual_1['input'] = []
+        expect_1 = {"name": "Mail Room", "key": "1", "is_movie": None, "formula": "for $a => $a", "input": [], "register_count": 0, "register_values": {}}
+        self.assertDictEqual(expect_1, actual_1, "Level 1 data OK")
+
+        game.start_new(5, None)
+        actual_5 = game.to_data()
+        expect_5 = {"name": "Coffee Time", "key": "5", "is_movie": True, "formula": None, "input": None, "register_count": None, "register_values": None}
+        self.assertDictEqual(expect_5, actual_5, "Level 5 data OK")
+
+
 
 
 

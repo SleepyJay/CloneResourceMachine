@@ -150,5 +150,32 @@ class Game():
         else:
             return self.levels[str(level_key)]
 
+    def to_data(self):
+        data = dict()
 
+        data['name'] = self.current_level.name
+        data['key'] = self.current_level.key
+        data['is_movie'] = self.current_level.is_movie
+
+        goal = self.get_goal()
+        if goal:
+            data['formula'] = goal.formula
+        else:
+            data['formula'] = None
+
+        input_details = self.current_level.input_details
+        if input_details:
+            data['input'] = input_details.sample or None
+        else:
+            data['input'] = None
+
+        registers = self.current_level.registers
+        if registers:
+            data['register_count'] = registers.count
+            data['register_values'] = registers.values
+        else:
+            data['register_count'] = None
+            data['register_values'] = None
+
+        return data
 
