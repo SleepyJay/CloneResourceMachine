@@ -18,6 +18,7 @@ class Program(object):
         self.commands = []
         self.labels = dict()
         self.available_cmds = available_cmds or []
+        self.orig_data = data
 
         # These are like "acceptable" values, which may differ from the goal values,
         # in which if set, override the goal values:

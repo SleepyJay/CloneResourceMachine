@@ -9,7 +9,7 @@ AvgResult = namedtuple('avg_result', 'all_passed, best_speed, worst_speed, avg_s
 MAX_ITERS = 1000
 
 
-class Game():
+class Game:
 
     def __init__(self, level_file=None):
         # This object is really only to abstract the YAML parsing into Levels,
