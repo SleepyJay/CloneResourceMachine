@@ -44,7 +44,7 @@ levels:
                 size: 24
                 speed: 20
                 commands:
-                    - echo this should show up, but not be counted in 'size'
+                    - echo repeat 12 times because the input is between 8-12 in the real game
                     - repeat:
                         count: 12
                         commands:
@@ -53,7 +53,6 @@ levels:
             small:
                 speed: 30
                 commands:
-                    - echo this should show up, but not be counted in 'size'
                     - inbox
                     - outbox
                     - jump 1
@@ -214,7 +213,7 @@ levels:
             - add
             - jump
         input:
-            alphabet: N Z
+            alphabet: P N Z
             count: 4
             sample:
                 - 1
